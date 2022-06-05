@@ -3,30 +3,23 @@
 class BookingData {
   static const String COLLECTION_NAME = 'Booking';
   String id;
-  String match;
   String stadium;
-  String date;
+  DateTime date;
 
-  BookingData(
-      {required this.id,
-      required this.match,
-      required this.stadium,
-      required this.date});
+  BookingData({required this.id, required this.stadium, required this.date});
 
   BookingData.fromJson(Map<String, dynamic> json)
       : this(
           id: json['id'] as String,
-          match: json['match'] as String,
           stadium: json['stadium'] as String,
-          date: json['date'] as String,
+          date: DateTime.fromMillisecondsSinceEpoch(json['date']! as int),
         );
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'match': match,
       'stadium': stadium,
-      'date': date,
+      'date': date.millisecondsSinceEpoch,
     };
   }
 }

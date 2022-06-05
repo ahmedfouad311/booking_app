@@ -21,20 +21,16 @@ CollectionReference<UserData> getUserCollectionwithConverter() {
       );
 }
 
-CollectionReference<UserBookingData> getUserBookingCollectionWithConverter(){
+CollectionReference<UserBookingData> getUserBookingCollectionWithConverter() {
   return FirebaseFirestore.instance
-  .collection(UserBookingData.COLLECTION_NAME)
-  .withConverter(
-    fromFirestore: (snapshot, _) => UserBookingData.fromJson(snapshot.data()!),
-     toFirestore: (data, _) => data.toJson()
-    );
+      .collection(UserBookingData.COLLECTION_NAME)
+      .withConverter(
+          fromFirestore: (snapshot, _) =>
+              UserBookingData.fromJson(snapshot.data()!),
+          toFirestore: (data, _) => data.toJson());
 }
 
-
-
-
-
-Future<void> addBookingToFirestore(String match, String stadium, String date) {
+Future<void> addBookingToFirestore(String stadium, DateTime date) {
   CollectionReference<BookingData> collectionReference =
       getBookingCollectionWithConverter();
 
@@ -42,7 +38,10 @@ Future<void> addBookingToFirestore(String match, String stadium, String date) {
       collectionReference.doc(); // to create new object with new id
 
   BookingData data = BookingData(
-      id: documentReference.id, match: match, stadium: stadium, date: date);
+    id: documentReference.id,
+    stadium: stadium,
+    date: date,
+  );
 
   return documentReference.set(data);
 }
@@ -59,7 +58,7 @@ Future<UserData?> getUserByID(String userId) async {
   return result.data();
 }
 
-Future<void> addUserBookingToFirebase(UserBookingData userBookingData){
+Future<void> addUserBookingToFirebase(UserBookingData userBookingData) {
   CollectionReference<UserBookingData> collectionReference =
       getUserBookingCollectionWithConverter();
 
@@ -70,7 +69,3 @@ Future<void> addUserBookingToFirebase(UserBookingData userBookingData){
 
   return documentReference.set(data);
 }
-
-
-
-

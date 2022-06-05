@@ -3,9 +3,9 @@
 import 'package:booking_app/admin/drop_down_admin.dart';
 import 'package:booking_app/common/common_functions.dart';
 import 'package:booking_app/data/firestore_utils.dart';
-import 'package:booking_app/login_register/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:time_range/time_range.dart';
 
 class AddBookingAdmin extends StatefulWidget {
   static const String ROUTE_NAME = 'Add Booking Admin';
@@ -17,13 +17,9 @@ class AddBookingAdmin extends StatefulWidget {
 }
 
 class _AddBookingAdminState extends State<AddBookingAdmin> {
-  String stadium = '';
-
-  String match = '';
-
-  String initialDropDownValue = '9AM to 11AM';
-
-  var formKey = GlobalKey<FormState>();
+  String initialDropDownValue = 'Cairo International Stadium';
+  DateTime selectedDate = DateTime.now();
+  TimeOfDay selectedTime = TimeOfDay.now();
 
   @override
   Widget build(BuildContext context) {
@@ -32,52 +28,6 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
         centerTitle: true,
         title: Text(
           AppLocalizations.of(context)!.add_booking_admin,
-        ),
-      ),
-      drawer: Drawer(
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 35),
-              width: double.infinity,
-              child: Text(
-                AppLocalizations.of(context)!.app_title,
-                textAlign: TextAlign.center,
-                style: Theme.of(context)
-                    .textTheme
-                    .headline5!
-                    .copyWith(color: Colors.white),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: InkWell(
-                onTap: (() {
-                  Navigator.pushReplacementNamed(context, LoginScreen.ROUTE_NAME);
-                }),
-                child: Row(
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)!.switch_to_user,
-                      style: const TextStyle(
-                        fontSize: 18
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    const Icon(Icons.person)
-                  ],
-                ),
-              ),
-            ),
-          ],
         ),
       ),
       body: SingleChildScrollView(
@@ -100,77 +50,48 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
                 const SizedBox(
                   height: 40,
                 ),
-                Form(
-                  key: formKey,
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        decoration: InputDecoration(
-                          enabledBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                          ),
-                          labelText: AppLocalizations.of(context)!.match,
-                          labelStyle: const TextStyle(
-                            color: Colors.grey,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        validator: (text) {
-                          if (text == null || text.isEmpty) {
-                            return AppLocalizations.of(context)!
-                                .error_message_match;
-                          }
-                          return null;
-                        },
-                        onChanged: (text) {
-                          match = text;
-                        },
-                        style: const TextStyle(
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 25,
-                      ),
-                      TextFormField(
-                        style: const TextStyle(
-                          color: Colors.black,
-                        ),
-                        onChanged: (text) {
-                          stadium = text;
-                        },
-                        decoration: InputDecoration(
-                          enabledBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                          ),
-                          labelText: AppLocalizations.of(context)!.stadium,
-                          labelStyle: const TextStyle(
-                            color: Colors.grey,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        validator: (text) {
-                          if (text == null || text.isEmpty) {
-                            return AppLocalizations.of(context)!
-                                .error_message_stadium;
-                          }
-                          return null;
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 50,
-                ),
                 DropDownButtonAdmin(
                   onChanged: (value) {
                     setState(() {
                       initialDropDownValue = value!;
                     });
                   },
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        showDateDialog();
+                      },
+                      child: Text(
+                        '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        showTimeDialog();
+                      },
+                      child: Text(
+                        "${selectedTime.hour}:${selectedTime.minute}",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                  ],
                 ),
                 const SizedBox(
                   height: 40,
@@ -196,15 +117,70 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
   }
 
   void addBooking() {
-    if (!formKey.currentState!.validate()) {
-      return;
-    }
-    addBookingToFirestore(match, stadium, initialDropDownValue).then((value) {
+    addBookingToFirestore(
+      initialDropDownValue,
+      selectedDate,
+    ).then((value) {
       showMessage('Booking added Successfully', context);
     }).onError((error, stackTrace) {
       showMessage('Error adding booking', context);
     }).timeout(const Duration(seconds: 10), onTimeout: () {
       showMessage('Cant connect to the server', context);
     });
+  }
+
+  void showDateDialog() async {
+    var newSelectedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+    if (newSelectedDate != null) {
+      selectedDate = newSelectedDate;
+      setState(() {});
+    }
+  }
+
+  void showTimeDialog() async {
+    var newSelectedTime = await showTimePicker(
+      context: context,
+      initialTime: selectedTime,
+      initialEntryMode: TimePickerEntryMode.dial,
+      confirmText: 'Confirm',
+      cancelText: 'Cancel',
+      helpText: 'Booking Time',
+    );
+    if (newSelectedTime != null && newSelectedTime != selectedTime) {
+      setState(() {
+        selectedTime = newSelectedTime;
+      });
+    }
+  }
+
+  void showTimeRange() {
+    var newSelectedTime = TimeRange(
+      fromTitle: Text(
+        'From',
+        style: TextStyle(fontSize: 18, color: Colors.white),
+      ),
+      toTitle: Text(
+        'To',
+        style: TextStyle(fontSize: 18, color: Colors.white),
+      ),
+      titlePadding: 20,
+      textStyle:
+          TextStyle(fontWeight: FontWeight.normal, color: Colors.black87),
+      activeTextStyle:
+          TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+      borderColor: Theme.of(context).primaryColor,
+      backgroundColor: Colors.transparent,
+      activeBackgroundColor: Colors.white,
+      firstTime: TimeOfDay(hour: 14, minute: 30),
+      lastTime: TimeOfDay(hour: 20, minute: 00),
+      timeStep: 10,
+      timeBlock: 30,
+      onRangeCompleted: (range) => setState(() => print(range)),
+    );
   }
 }
