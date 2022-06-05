@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:booking_app/admin/add_booking_admin.dart';
+import 'package:booking_app/admin/admin_home.dart';
 import 'package:booking_app/common/common_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -123,7 +124,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       Navigator.pushNamed(context, RegisterScreen.ROUTE_NAME);
                     },
-                    child: Text(AppLocalizations.of(context)!.or_create_account),
+                    child:
+                        Text(AppLocalizations.of(context)!.or_create_account),
                   ),
                   const SizedBox(
                     height: 20,
@@ -191,7 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
           hideLoading(context);
           if (result.user != null) {
             showMessage('admin logged in Successfully!', context);
-            Navigator.pushReplacementNamed(context, AddBookingAdmin.ROUTE_NAME);
+            Navigator.pushReplacementNamed(context, AdminHome.ROUTE_NAME);
             // retrieve user's data from fireBase
             // var fireStoreUser = await getUserByID(result.user!.uid);
             // if (fireStoreUser != null) {
@@ -228,28 +230,29 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void phoneVerify() async {
-  FirebaseAuth auth = FirebaseAuth.instance;
-  var result = await FirebaseAuth.instance.verifyPhoneNumber(
-  phoneNumber: email,
-  verificationCompleted: (PhoneAuthCredential credential) async {
-    await auth.signInWithCredential(credential);
-  },
-  verificationFailed: (FirebaseAuthException e) {
-    if (e.code == 'invalid-phone-number') {
-      print('The provided phone number is not valid.');
-    }
-  },
-  codeSent: (String verificationId, int? resendToken) async {
-    String smsCode = '5555';
+    FirebaseAuth auth = FirebaseAuth.instance;
+    var result = await FirebaseAuth.instance.verifyPhoneNumber(
+      phoneNumber: email,
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        await auth.signInWithCredential(credential);
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        if (e.code == 'invalid-phone-number') {
+          print('The provided phone number is not valid.');
+        }
+      },
+      codeSent: (String verificationId, int? resendToken) async {
+        String smsCode = '5555';
 
-    // Create a PhoneAuthCredential with the code
-    PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
+        // Create a PhoneAuthCredential with the code
+        PhoneAuthCredential credential = PhoneAuthProvider.credential(
+            verificationId: verificationId, smsCode: smsCode);
 
-    // Sign the user in (or link) with the credential
-    await auth.signInWithCredential(credential);
-  },
-  timeout: const Duration(seconds: 60),
-  codeAutoRetrievalTimeout: (String verificationId) {},
-);
-}
+        // Sign the user in (or link) with the credential
+        await auth.signInWithCredential(credential);
+      },
+      timeout: const Duration(seconds: 60),
+      codeAutoRetrievalTimeout: (String verificationId) {},
+    );
+  }
 }

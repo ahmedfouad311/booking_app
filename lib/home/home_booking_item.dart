@@ -9,7 +9,6 @@ class HomeBookingItem extends StatefulWidget {
   State<HomeBookingItem> createState() => _HomeBookingItemState();
 }
 
-
 class _HomeBookingItemState extends State<HomeBookingItem> {
   @override
   Widget build(BuildContext context) {
@@ -33,24 +32,6 @@ class _HomeBookingItemState extends State<HomeBookingItem> {
                 ),
                 const SizedBox(
                   height: 20,
-                ),
-                Text(
-                  widget.userBookingData.match,
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle1!
-                      .copyWith(color: Colors.white),
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                Text(
-                  widget.userBookingData.date,
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle1!
-                      .copyWith(color: Colors.white),
                 ),
               ],
             ),

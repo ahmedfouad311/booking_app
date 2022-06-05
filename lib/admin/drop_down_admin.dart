@@ -12,16 +12,16 @@ class DropDownButtonAdmin extends StatefulWidget {
 
 class _DropDownButtonAdminState extends State<DropDownButtonAdmin> {
   late String initialDropDownValue;
-  List<String> time = [
-    '9 AM to 11 AM',
-    '1 PM to 3 PM',
-    '5 PM to 7 PM',
-    '9 PM to 11 PM'
+  List<String> stadiums = [
+    'Cairo International Stadium',
+    'Borg El Arab Stadium',
+    'Suez Stadium',
+    'Mokhtar El Tetsh Stadium'
   ];
 
   @override
   void initState() {
-    initialDropDownValue = time[0];
+    initialDropDownValue = stadiums[0];
     super.initState();
   }
 
@@ -48,7 +48,7 @@ class _DropDownButtonAdminState extends State<DropDownButtonAdmin> {
       elevation: 16,
       style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
       onChanged: widget.onChanged,
-      items: time.map<DropdownMenuItem<String>>((String value) {
+      items: stadiums.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(value),

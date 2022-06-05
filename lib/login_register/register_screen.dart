@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, avoid_print
 
 import 'dart:developer';
 
@@ -24,6 +24,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String email = '';
   String password = '';
   bool passwordVisible = false;
+  String smsCode = '';
 
   var formKey = GlobalKey<FormState>();
 
@@ -70,15 +71,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onChanged: (text) {
                       email = text;
                     },
-                    // validator: (text) {
-                    //   if (text == null || text.trim().isEmpty) {
-                    //     return 'Please Enter Your Email';
-                    //   }
-                    //   if (!isValidEmail(email) || !isPhone(email)) {
-                    //     return 'Please Enter a vaild email address or phone number';
-                    //   }
-                    //   return null;
-                    // },
+                    validator: (text) {
+                      if (text == null || text.trim().isEmpty) {
+                        return 'Please Enter Your Email';
+                      }
+                      if (!isValidEmail(email) && !isPhone(email)) {
+                        return 'Please Enter a vaild email address or phone number';
+                      }
+                      return null;
+                    },
                     decoration: const InputDecoration(
                       labelText: 'Email',
                     ),
@@ -171,15 +172,58 @@ class _RegisterScreenState extends State<RegisterScreen> {
         await auth.verifyPhoneNumber(
           phoneNumber: email,
           codeAutoRetrievalTimeout: (String verificationId) {},
-          codeSent: (String verificationId, int? forceResendingToken) async {},
-          verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async {
+          codeSent: (String verificationId, int? forceResendingToken) async {
+            showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Enter SMS code'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextField(
+                          onChanged: (text) {
+                            smsCode = text;
+                          },
+                        ),
+                      ],
+                    ),
+                    actions: [
+                      ElevatedButton(
+                        onPressed: () {
+                          FirebaseAuth auth = FirebaseAuth.instance;
+                          var credential = PhoneAuthProvider.credential(
+                              verificationId: verificationId, smsCode: smsCode);
+                          auth.signInWithCredential(credential).then((value) =>
+                              Navigator.pushReplacementNamed(
+                                      context, HomeScreen.ROUTE_NAME)
+                                  .catchError((e) {
+                                print('Errorrrrrrrrrr');
+                              }));
+                        },
+                        child: const Text('Done'),
+                      )
+                    ],
+                  );
+                });
+          },
+          timeout: const Duration(seconds: 60),
+          verificationCompleted:
+              (PhoneAuthCredential phoneAuthCredential) async {
             log(phoneAuthCredential.providerId);
-            await auth.signInWithCredential(phoneAuthCredential);
+            await auth
+                .signInWithCredential(phoneAuthCredential)
+                .then((value) => Navigator.pushReplacementNamed(
+                    context, HomeScreen.ROUTE_NAME))
+                .catchError((e) {
+              print('Errorrrrrrrrrrrrr 2');
+            });
           },
           verificationFailed: (FirebaseAuthException error) {
             if (error.code == 'invalid-phone-number') {
-                print('The provided phone number is not valid.');
-    }
+              print('The provided phone number is not valid.');
+            }
           },
         );
         hideLoading(context);

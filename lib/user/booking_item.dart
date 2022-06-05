@@ -16,7 +16,6 @@ class BookingItem extends StatefulWidget {
   State<BookingItem> createState() => _BookingItemState();
 }
 
-
 class _BookingItemState extends State<BookingItem> {
   @override
   Widget build(BuildContext context) {
@@ -41,34 +40,21 @@ class _BookingItemState extends State<BookingItem> {
                 const SizedBox(
                   height: 20,
                 ),
-                Text(
-                  widget.bookingData.match,
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle1!
-                      .copyWith(color: Colors.white),
-                ),
               ],
             ),
             Column(
               children: [
-                Text(
-                  widget.bookingData.date,
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle1!
-                      .copyWith(color: Colors.white),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                ElevatedButton(onPressed: (){
-                  addBooking(widget.bookingData);
-                },
-                style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.white),
-                ),
-                 child: Text(AppLocalizations.of(context)!.book , style: TextStyle(color: Theme.of(context).primaryColor),))
+                ElevatedButton(
+                    onPressed: () {
+                      addBooking(widget.bookingData);
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.white),
+                    ),
+                    child: Text(
+                      AppLocalizations.of(context)!.book,
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    ))
               ],
             ),
           ],
@@ -77,9 +63,13 @@ class _BookingItemState extends State<BookingItem> {
     );
   }
 
-  UserBookingData userData(BookingData bookingData){
+  UserBookingData userData(BookingData bookingData) {
     var user = FirebaseAuth.instance.currentUser;
-    UserBookingData userBookingData = UserBookingData(id: bookingData.id, userId: user!.uid, match: bookingData.match, stadium: bookingData.stadium, date: bookingData.date);
+    UserBookingData userBookingData = UserBookingData(
+      id: bookingData.id,
+      userId: user!.uid,
+      stadium: bookingData.stadium,
+    );
     return userBookingData;
   }
 

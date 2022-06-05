@@ -1,4 +1,5 @@
 import 'package:booking_app/admin/add_booking_admin.dart';
+import 'package:booking_app/admin/admin_home.dart';
 import 'package:booking_app/home/home_screen.dart';
 import 'package:booking_app/login_register/login_screen.dart';
 import 'package:booking_app/login_register/register_screen.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
         HomeScreen.ROUTE_NAME: (context) => const HomeScreen(),
         LoginScreen.ROUTE_NAME: (context) => const LoginScreen(),
         RegisterScreen.ROUTE_NAME: (context) => const RegisterScreen(),
+        AdminHome.ROUTE_NAME: (context) => const AdminHome(),
         AddBookingAdmin.ROUTE_NAME: (context) => const AddBookingAdmin(),
         UserBooking.ROUTE_NAME: (context) => const UserBooking(),
       },
