@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "786703379616",
+    "project_id": "football-booking-app",
+    "storage_bucket": "football-booking-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:786703379616:android:0f3defb7f82746673cadc5",
+        "android_client_info": {
+          "package_name": "com.example.booking_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "786703379616-sf3jq4lg28erl898npmv103fo4dt1n45.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgEhenD-0We82n8bKfH_CnKWexgzbKDgI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "786703379616-sf3jq4lg28erl898npmv103fo4dt1n45.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
