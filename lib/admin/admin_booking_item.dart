@@ -2,6 +2,8 @@
 
 import 'package:booking_app/data/booking_data.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AdminBookingItem extends StatelessWidget {
   BookingData bookingData;
@@ -30,16 +32,31 @@ class AdminBookingItem extends StatelessWidget {
                 height: 20,
               ),
               Text(
-                bookingData.date.toString(),
+                AppLocalizations.of(context)!.from + fromFormatDate(),
                 style: Theme.of(context)
                     .textTheme
-                    .headline4!
-                    .copyWith(color: Colors.white),
+                    .subtitle1!
+                    .copyWith(color: Colors.white, fontSize: 20),
+              ),
+              Text(
+                AppLocalizations.of(context)!.to + toFormatDate(),
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1!
+                    .copyWith(color: Colors.white, fontSize: 20),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  String fromFormatDate() {
+    return DateFormat.yMMMEd().format(bookingData.fromDate);
+  }
+
+  String toFormatDate() {
+    return DateFormat.yMMMEd().format(bookingData.toDate);
   }
 }

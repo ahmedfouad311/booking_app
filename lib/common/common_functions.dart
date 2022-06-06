@@ -8,10 +8,9 @@ bool isValidEmail(String email) {
       .hasMatch(email);
 }
 
-bool isPhone(String phone){
-  return RegExp(
-  r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$'
-).hasMatch(phone);
+bool isPhone(String phone) {
+  return RegExp(r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$')
+      .hasMatch(phone);
 }
 
 void showMessage(String message, BuildContext context) {

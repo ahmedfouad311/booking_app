@@ -39,7 +39,7 @@ dependencies:
   cloud_firestore: ^3.1.17
   firebase_auth: ^3.3.19
   flutter_speed_dial: ^6.0.0
-  time_range: ^1.0.2
+  time_range_picker: ^2.1.0
 
 
   # The following adds the Cupertino Icons font to your application.

@@ -30,7 +30,11 @@ CollectionReference<UserBookingData> getUserBookingCollectionWithConverter() {
           toFirestore: (data, _) => data.toJson());
 }
 
-Future<void> addBookingToFirestore(String stadium, DateTime date) {
+Future<void> addBookingToFirestore(
+  String stadium,
+  DateTime fromDate,
+  DateTime toDate,
+) {
   CollectionReference<BookingData> collectionReference =
       getBookingCollectionWithConverter();
 
@@ -40,7 +44,8 @@ Future<void> addBookingToFirestore(String stadium, DateTime date) {
   BookingData data = BookingData(
     id: documentReference.id,
     stadium: stadium,
-    date: date,
+    fromDate: fromDate,
+    toDate: toDate,
   );
 
   return documentReference.set(data);

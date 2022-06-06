@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, avoid_print
+// ignore_for_file: non_constant_identifier_names, avoid_print, constant_identifier_names
 
 import 'dart:developer';
 
@@ -56,12 +56,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     },
                     validator: (text) {
                       if (text == null || text.trim().isEmpty) {
-                        return 'Please Enter Your name';
+                        return AppLocalizations.of(context)!
+                            .please_enter_your_name;
                       }
                       return null;
                     },
-                    decoration: const InputDecoration(
-                      labelText: 'User Name',
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)!.user_name,
                     ),
                   ),
                   const SizedBox(
@@ -73,15 +74,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     },
                     validator: (text) {
                       if (text == null || text.trim().isEmpty) {
-                        return 'Please Enter Your Email';
+                        return AppLocalizations.of(context)!
+                            .please_enter_your_email;
                       }
                       if (!isValidEmail(email) && !isPhone(email)) {
-                        return 'Please Enter a vaild email address or phone number';
+                        return AppLocalizations.of(context)!
+                            .please_enter_a_vaild_email_address_or_phone_number;
                       }
                       return null;
                     },
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)!.the_email,
                     ),
                   ),
                   const SizedBox(
@@ -94,10 +97,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     },
                     validator: (text) {
                       if (text == null || text.trim().isEmpty) {
-                        return 'Please Enter a password';
+                        return AppLocalizations.of(context)!
+                            .please_enter_a_password;
                       }
                       if (text.length < 6) {
-                        return 'Password is too short';
+                        return AppLocalizations.of(context)!
+                            .password_is_too_short;
                       }
                       return null;
                     },
@@ -109,7 +114,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             });
                           },
                           child: const Icon(Icons.remove_red_eye)),
-                      labelText: 'Password',
+                      labelText: AppLocalizations.of(context)!.the_password,
                     ),
                   ),
                   const SizedBox(
@@ -161,7 +166,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               password: password);
           addUserTOFireStore(myUser).then((value) {
             // provider.updateUser(myUser);
-            showMessage('User Registered Successfully!', context);
+            showMessage(
+                AppLocalizations.of(context)!.user_registered_successfully,
+                context);
             Navigator.pushReplacementNamed(context, HomeScreen.ROUTE_NAME);
           }).onError((error, stackTrace) {
             showMessage(error.toString(), context);
@@ -178,7 +185,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 barrierDismissible: false,
                 builder: (context) {
                   return AlertDialog(
-                    title: const Text('Enter SMS code'),
+                    title: Text(AppLocalizations.of(context)!.enter_SMS_code),
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -202,7 +209,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 print('Errorrrrrrrrrr');
                               }));
                         },
-                        child: const Text('Done'),
+                        child: Text(AppLocalizations.of(context)!.done),
                       )
                     ],
                   );

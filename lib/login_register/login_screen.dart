@@ -1,6 +1,5 @@
-// ignore_for_file: constant_identifier_names
+// ignore_for_file: constant_identifier_names, unused_local_variable, avoid_print
 
-import 'package:booking_app/admin/add_booking_admin.dart';
 import 'package:booking_app/admin/admin_home.dart';
 import 'package:booking_app/common/common_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -55,15 +54,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     validator: (text) {
                       if (text == null || text.trim().isEmpty) {
-                        return 'Please Enter Your Email';
+                        return AppLocalizations.of(context)!
+                            .please_enter_your_email;
                       }
                       if (!isValidEmail(email)) {
-                        return 'Please Enter a vaild email address';
+                        return AppLocalizations.of(context)!
+                            .please_enter_a_vaild_email_address_or_phone_number;
                       }
                       return null;
                     },
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)!.the_email,
                     ),
                   ),
                   const SizedBox(
@@ -76,10 +77,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     validator: (text) {
                       if (text == null || text.trim().isEmpty) {
-                        return 'Please Enter a password';
+                        return AppLocalizations.of(context)!
+                            .please_enter_a_password;
                       }
                       if (text.length < 6) {
-                        return 'Password is too short';
+                        return AppLocalizations.of(context)!
+                            .password_is_too_short;
                       }
                       return null;
                     },
@@ -91,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             });
                           },
                           child: const Icon(Icons.remove_red_eye)),
-                      labelText: 'Password',
+                      labelText: AppLocalizations.of(context)!.the_password,
                     ),
                   ),
                   const SizedBox(
@@ -192,7 +195,9 @@ class _LoginScreenState extends State<LoginScreen> {
               .signInWithEmailAndPassword(email: email, password: password);
           hideLoading(context);
           if (result.user != null) {
-            showMessage('admin logged in Successfully!', context);
+            showMessage(
+                AppLocalizations.of(context)!.admin_logged_in_successfully,
+                context);
             Navigator.pushReplacementNamed(context, AdminHome.ROUTE_NAME);
             // retrieve user's data from fireBase
             // var fireStoreUser = await getUserByID(result.user!.uid);
@@ -204,7 +209,8 @@ class _LoginScreenState extends State<LoginScreen> {
           }
         } catch (error) {
           hideLoading(context);
-          showMessage('Invaild Email or Password', context);
+          showMessage(
+              AppLocalizations.of(context)!.invaild_email_or_password, context);
         }
       }
     } else {
@@ -214,7 +220,8 @@ class _LoginScreenState extends State<LoginScreen> {
             .signInWithEmailAndPassword(email: email, password: password);
         hideLoading(context);
         if (result.user != null) {
-          showMessage('User logged in Successfully!', context);
+          showMessage(AppLocalizations.of(context)!.user_logged_in_successfully,
+              context);
           Navigator.pushReplacementNamed(context, HomeScreen.ROUTE_NAME);
           // retrieve user's data from fireBase
           // var fireStoreUser = await getUserByID(result.user!.uid);
@@ -224,7 +231,8 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       } catch (error) {
         hideLoading(context);
-        showMessage('Invaild Email or Password', context);
+        showMessage(
+            AppLocalizations.of(context)!.invaild_email_or_password, context);
       }
     }
   }

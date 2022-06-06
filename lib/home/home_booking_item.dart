@@ -1,5 +1,9 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:booking_app/data/user_booking_data.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeBookingItem extends StatefulWidget {
   UserBookingData userBookingData;
@@ -17,21 +21,37 @@ class _HomeBookingItemState extends State<HomeBookingItem> {
       child: Container(
         padding: const EdgeInsets.all(20),
         color: Theme.of(context).primaryColor,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              widget.userBookingData.stadium,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline4!
+                  .copyWith(color: Colors.white),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.userBookingData.stadium,
+                  AppLocalizations.of(context)!.from + fromFormatDate(),
                   style: Theme.of(context)
                       .textTheme
-                      .headline4!
-                      .copyWith(color: Colors.white),
+                      .subtitle1!
+                      .copyWith(color: Colors.white, fontSize: 18),
                 ),
                 const SizedBox(
-                  height: 20,
+                  width: 3,
+                ),
+                Text(
+                  AppLocalizations.of(context)!.to + toFormatDate(),
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1!
+                      .copyWith(color: Colors.white, fontSize: 18),
                 ),
               ],
             ),
@@ -39,5 +59,13 @@ class _HomeBookingItemState extends State<HomeBookingItem> {
         ),
       ),
     );
+  }
+
+  String fromFormatDate() {
+    return DateFormat.yMMMEd().format(widget.userBookingData.userFromDate);
+  }
+
+  String toFormatDate() {
+    return DateFormat.yMMMEd().format(widget.userBookingData.userToDate);
   }
 }

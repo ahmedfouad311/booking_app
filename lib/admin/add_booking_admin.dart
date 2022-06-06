@@ -1,11 +1,11 @@
-// ignore_for_file: constant_identifier_names, must_be_immutable
+// ignore_for_file: constant_identifier_names, must_be_immutable, unused_local_variable, avoid_print
 
 import 'package:booking_app/admin/drop_down_admin.dart';
 import 'package:booking_app/common/common_functions.dart';
 import 'package:booking_app/data/firestore_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:time_range/time_range.dart';
+import 'package:time_range_picker/time_range_picker.dart';
 
 class AddBookingAdmin extends StatefulWidget {
   static const String ROUTE_NAME = 'Add Booking Admin';
@@ -18,8 +18,11 @@ class AddBookingAdmin extends StatefulWidget {
 
 class _AddBookingAdminState extends State<AddBookingAdmin> {
   String initialDropDownValue = 'Cairo International Stadium';
-  DateTime selectedDate = DateTime.now();
-  TimeOfDay selectedTime = TimeOfDay.now();
+  DateTime startSelectedDate = DateTime.now();
+  DateTime endSelectedDate = DateTime.now().add(const Duration(days: 7));
+  TimeOfDay startSelectedTime = TimeOfDay.now();
+  TimeOfDay endSelectedTime =
+      TimeOfDay(hour: TimeOfDay.now().hour + 3, minute: TimeOfDay.now().minute);
 
   @override
   Widget build(BuildContext context) {
@@ -60,15 +63,15 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
                 const SizedBox(
                   height: 30,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        showDateDialog();
-                      },
-                      child: Text(
-                        '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}',
+                InkWell(
+                  onTap: () {
+                    showDateDialog();
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '${AppLocalizations.of(context)!.from} ${startSelectedDate.day}/${startSelectedDate.month}/${startSelectedDate.year} - ',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontSize: 16,
@@ -76,13 +79,11 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        showTimeDialog();
-                      },
-                      child: Text(
-                        "${selectedTime.hour}:${selectedTime.minute}",
+                      const SizedBox(
+                        width: 2,
+                      ),
+                      Text(
+                        '${AppLocalizations.of(context)!.to} ${endSelectedDate.day}/${endSelectedDate.month}/${endSelectedDate.year}',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontSize: 16,
@@ -90,8 +91,42 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    )
-                  ],
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                InkWell(
+                  onTap: () {
+                    showTimeDialog();
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "${AppLocalizations.of(context)!.from} ${startSelectedTime.hour}:${startSelectedTime.minute} - ",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 2,
+                      ),
+                      Text(
+                        "${AppLocalizations.of(context)!.to} ${endSelectedTime.hour}:${endSelectedTime.minute}",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(
                   height: 40,
@@ -119,68 +154,84 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
   void addBooking() {
     addBookingToFirestore(
       initialDropDownValue,
-      selectedDate,
+      startSelectedDate,
+      endSelectedDate,
     ).then((value) {
-      showMessage('Booking added Successfully', context);
+      showMessage(
+          AppLocalizations.of(context)!.booking_added_successfully, context);
     }).onError((error, stackTrace) {
-      showMessage('Error adding booking', context);
+      showMessage(AppLocalizations.of(context)!.error_adding_booking, context);
     }).timeout(const Duration(seconds: 10), onTimeout: () {
-      showMessage('Cant connect to the server', context);
+      showMessage(
+          AppLocalizations.of(context)!.cant_connect_to_the_server, context);
     });
   }
 
   void showDateDialog() async {
-    var newSelectedDate = await showDatePicker(
+    var newSelectedDate = await showDateRangePicker(
       context: context,
-      initialDate: selectedDate,
+      initialDateRange: DateTimeRange(
+          start: DateTime.now(),
+          end: DateTime.now().add(const Duration(days: 7))),
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
     if (newSelectedDate != null) {
-      selectedDate = newSelectedDate;
+      startSelectedDate = newSelectedDate.start;
+      endSelectedDate = newSelectedDate.end;
+
       setState(() {});
     }
   }
 
   void showTimeDialog() async {
-    var newSelectedTime = await showTimePicker(
+    var newSelectedTime = await showTimeRangePicker(
       context: context,
-      initialTime: selectedTime,
-      initialEntryMode: TimePickerEntryMode.dial,
-      confirmText: 'Confirm',
-      cancelText: 'Cancel',
-      helpText: 'Booking Time',
+      start: TimeOfDay.now(),
+      onStartChange: (start) {
+        print("start time " + start.toString());
+        startSelectedTime = start;
+        setState(() {});
+      },
+      onEndChange: (end) {
+        print("end time " + end.toString());
+        endSelectedTime = end;
+        setState(() {});
+      },
+      interval: const Duration(hours: 1),
+      minDuration: const Duration(hours: 1),
+      use24HourFormat: false,
+      padding: 30,
+      strokeWidth: 20,
+      handlerRadius: 14,
+      strokeColor: Theme.of(context).primaryColor,
+      handlerColor: Theme.of(context).primaryColor,
+      selectedColor: Colors.white,
+      backgroundColor: Colors.black.withOpacity(0.3),
+      ticks: 12,
+      ticksColor: Colors.white,
+      snap: true,
+      labels: ["6", "9", "12 ", "3 "].asMap().entries.map((e) {
+        return ClockLabel.fromIndex(idx: e.key, length: 4, text: e.value);
+      }).toList(),
+      labelOffset: -30,
+      labelStyle: const TextStyle(
+          fontSize: 22, color: Colors.grey, fontWeight: FontWeight.bold),
+      timeTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 24,
+          fontStyle: FontStyle.italic,
+          fontWeight: FontWeight.bold),
+      activeTimeTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 26,
+          fontStyle: FontStyle.italic,
+          fontWeight: FontWeight.bold),
     );
-    if (newSelectedTime != null && newSelectedTime != selectedTime) {
-      setState(() {
-        selectedTime = newSelectedTime;
-      });
-    }
-  }
-
-  void showTimeRange() {
-    var newSelectedTime = TimeRange(
-      fromTitle: Text(
-        'From',
-        style: TextStyle(fontSize: 18, color: Colors.white),
-      ),
-      toTitle: Text(
-        'To',
-        style: TextStyle(fontSize: 18, color: Colors.white),
-      ),
-      titlePadding: 20,
-      textStyle:
-          TextStyle(fontWeight: FontWeight.normal, color: Colors.black87),
-      activeTextStyle:
-          TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-      borderColor: Theme.of(context).primaryColor,
-      backgroundColor: Colors.transparent,
-      activeBackgroundColor: Colors.white,
-      firstTime: TimeOfDay(hour: 14, minute: 30),
-      lastTime: TimeOfDay(hour: 20, minute: 00),
-      timeStep: 10,
-      timeBlock: 30,
-      onRangeCompleted: (range) => setState(() => print(range)),
-    );
+    // if (newSelectedTime != null && newSelectedTime != selectedTime) {
+    //   setState(() {
+    //     selectedTime = newSelectedTime;
+    //   });
+    // }
   }
 }
