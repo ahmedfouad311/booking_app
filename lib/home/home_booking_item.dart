@@ -3,7 +3,6 @@
 import 'package:booking_app/data/user_booking_data.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeBookingItem extends StatefulWidget {
   UserBookingData userBookingData;
@@ -34,26 +33,22 @@ class _HomeBookingItemState extends State<HomeBookingItem> {
             const SizedBox(
               height: 10,
             ),
-            Column(
-              children: [
-                Text(
-                  AppLocalizations.of(context)!.from + fromFormatDate(),
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle1!
-                      .copyWith(color: Colors.white, fontSize: 18),
-                ),
-                const SizedBox(
-                  width: 3,
-                ),
-                Text(
-                  AppLocalizations.of(context)!.to + toFormatDate(),
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle1!
-                      .copyWith(color: Colors.white, fontSize: 18),
-                ),
-              ],
+            Text(
+              fromFormatDate(),
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle1!
+                  .copyWith(color: Colors.white, fontSize: 18),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Text(
+              widget.userBookingData.bookRange,
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle1!
+                  .copyWith(color: Colors.white, fontSize: 18),
             ),
           ],
         ),
@@ -62,10 +57,6 @@ class _HomeBookingItemState extends State<HomeBookingItem> {
   }
 
   String fromFormatDate() {
-    return DateFormat.yMMMEd().format(widget.userBookingData.userFromDate);
-  }
-
-  String toFormatDate() {
-    return DateFormat.yMMMEd().format(widget.userBookingData.userToDate);
+    return DateFormat.yMMMEd().format(widget.userBookingData.userDate);
   }
 }

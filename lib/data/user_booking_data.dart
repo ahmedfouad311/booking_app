@@ -5,35 +5,33 @@ class UserBookingData {
   String id;
   String userId;
   String stadium;
-  DateTime userFromDate;
-  DateTime userToDate;
+  DateTime userDate;
+  String bookRange;
 
   UserBookingData({
     required this.id,
     required this.userId,
     required this.stadium,
-    required this.userFromDate,
-    required this.userToDate,
+    required this.userDate,
+    required this.bookRange,
   });
 
   UserBookingData.fromJson(Map<String, dynamic> json)
       : this(
-          id: json['id'] as String,
-          userId: json['userId'] as String,
-          stadium: json['stadium'] as String,
-          userFromDate:
-              DateTime.fromMillisecondsSinceEpoch(json['userFromDate']! as int),
-          userToDate:
-              DateTime.fromMillisecondsSinceEpoch(json['userToDate']! as int),
-        );
+            id: json['id']! as String,
+            userId: json['userId']! as String,
+            stadium: json['stadium']! as String,
+            userDate: DateTime.fromMillisecondsSinceEpoch(
+                json['userFromDate']! as int),
+            bookRange: json['bookRange']! as String);
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'userId': userId,
       'stadium': stadium,
-      'userFromDate': userFromDate.millisecondsSinceEpoch,
-      'userToDate': userToDate.millisecondsSinceEpoch,
+      'userFromDate': userDate.millisecondsSinceEpoch,
+      'bookRange': bookRange,
     };
   }
 }

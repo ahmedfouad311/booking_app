@@ -6,13 +6,14 @@ class BookingData {
   String stadium;
   DateTime fromDate;
   DateTime toDate;
+  String hours;
 
-  BookingData({
-    required this.id,
-    required this.stadium,
-    required this.fromDate,
-    required this.toDate,
-  });
+  BookingData(
+      {required this.id,
+      required this.stadium,
+      required this.fromDate,
+      required this.toDate,
+      required this.hours});
 
   BookingData.fromJson(Map<String, dynamic> json)
       : this(
@@ -21,6 +22,7 @@ class BookingData {
           fromDate:
               DateTime.fromMillisecondsSinceEpoch(json['fromDate']! as int),
           toDate: DateTime.fromMillisecondsSinceEpoch(json['toDate']! as int),
+          hours: json['hours'] as String,
         );
 
   Map<String, dynamic> toJson() {
@@ -29,6 +31,7 @@ class BookingData {
       'stadium': stadium,
       'fromDate': fromDate.millisecondsSinceEpoch,
       'toDate': toDate.millisecondsSinceEpoch,
+      'hours': hours
     };
   }
 }

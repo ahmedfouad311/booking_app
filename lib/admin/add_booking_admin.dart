@@ -18,6 +18,7 @@ class AddBookingAdmin extends StatefulWidget {
 
 class _AddBookingAdminState extends State<AddBookingAdmin> {
   String initialDropDownValue = 'Cairo International Stadium';
+  String initialDropDownValueHours = '1 Hour';
   DateTime startSelectedDate = DateTime.now();
   DateTime endSelectedDate = DateTime.now().add(const Duration(days: 7));
   TimeOfDay startSelectedTime = TimeOfDay.now();
@@ -54,6 +55,12 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
                   height: 40,
                 ),
                 DropDownButtonAdmin(
+                  dropDownList: const [
+                    'Cairo International Stadium',
+                    'Borg El Arab Stadium',
+                    'Suez Stadium',
+                    'Mokhtar El Tetsh Stadium'
+                  ],
                   onChanged: (value) {
                     setState(() {
                       initialDropDownValue = value!;
@@ -116,20 +123,36 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
                       const SizedBox(
                         width: 2,
                       ),
-                      Text(
-                        "${AppLocalizations.of(context)!.to} ${endSelectedTime.hour}:${endSelectedTime.minute}",
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      // Text(
+                      //   "${AppLocalizations.of(context)!.to} ${endSelectedTime.hour}:${endSelectedTime.minute}",
+                      //   textAlign: TextAlign.center,
+                      //   style: const TextStyle(
+                      //     fontSize: 16,
+                      //     color: Colors.black,
+                      //     fontWeight: FontWeight.bold,
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
                 const SizedBox(
-                  height: 40,
+                  height: 20,
+                ),
+                DropDownButtonAdmin(
+                  onChanged: (value) {
+                    setState(() {
+                      initialDropDownValueHours = value!;
+                    });
+                  },
+                  dropDownList: const [
+                    '1 Hours',
+                    '2 Hours',
+                    '3 Hours',
+                    '4 Hours',
+                  ],
+                ),
+                const SizedBox(
+                  height: 30,
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -152,11 +175,11 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
   }
 
   void addBooking() {
-    addBookingToFirestore(
-      initialDropDownValue,
-      startSelectedDate,
-      endSelectedDate,
-    ).then((value) {
+    addBookingToFirestore(initialDropDownValue, startSelectedDate,
+            endSelectedDate, initialDropDownValueHours)
+        .then((value) {
+      // print('Timeeeeeeeee ${Timestamp.fromDate(startSelectedDate).toDate()}');
+      // print('Timeeeeeeeee2 ${Timestamp.fromDate(endSelectedDate).toDate()}');
       showMessage(
           AppLocalizations.of(context)!.booking_added_successfully, context);
     }).onError((error, stackTrace) {
@@ -228,10 +251,5 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
           fontStyle: FontStyle.italic,
           fontWeight: FontWeight.bold),
     );
-    // if (newSelectedTime != null && newSelectedTime != selectedTime) {
-    //   setState(() {
-    //     selectedTime = newSelectedTime;
-    //   });
-    // }
   }
 }

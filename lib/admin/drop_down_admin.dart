@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 
 class DropDownButtonAdmin extends StatefulWidget {
   void Function(String?) onChanged;
-  DropDownButtonAdmin({Key? key, required this.onChanged}) : super(key: key);
+  List<String> dropDownList;
+  DropDownButtonAdmin(
+      {Key? key, required this.onChanged, required this.dropDownList})
+      : super(key: key);
 
   @override
   State<DropDownButtonAdmin> createState() => _DropDownButtonAdminState();
@@ -12,16 +15,9 @@ class DropDownButtonAdmin extends StatefulWidget {
 
 class _DropDownButtonAdminState extends State<DropDownButtonAdmin> {
   late String initialDropDownValue;
-  List<String> stadiums = [
-    'Cairo International Stadium',
-    'Borg El Arab Stadium',
-    'Suez Stadium',
-    'Mokhtar El Tetsh Stadium'
-  ];
-
   @override
   void initState() {
-    initialDropDownValue = stadiums[0];
+    initialDropDownValue = widget.dropDownList[0];
     super.initState();
   }
 
@@ -44,11 +40,15 @@ class _DropDownButtonAdminState extends State<DropDownButtonAdmin> {
       ),
       dropdownColor: Colors.white,
       value: initialDropDownValue,
-      icon: const Icon(Icons.arrow_downward),
+      icon: Icon(
+        Icons.arrow_downward,
+        color: Theme.of(context).primaryColor,
+      ),
       elevation: 16,
-      style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+      style: TextStyle(
+          color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),
       onChanged: widget.onChanged,
-      items: stadiums.map<DropdownMenuItem<String>>((String value) {
+      items: widget.dropDownList.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(value),

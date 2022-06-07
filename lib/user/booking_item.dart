@@ -1,6 +1,8 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:booking_app/admin/drop_down_admin.dart';
 import 'package:booking_app/common/common_functions.dart';
+import 'package:booking_app/common/datetime_handler.dart';
 import 'package:booking_app/data/booking_data.dart';
 import 'package:booking_app/data/firestore_utils.dart';
 import 'package:booking_app/data/user_booking_data.dart';
@@ -11,8 +13,33 @@ import 'package:intl/intl.dart';
 
 class BookingItem extends StatefulWidget {
   BookingData bookingData;
-  DateTime userStartDate = DateTime.now();
-  DateTime userEndDate = DateTime.now().add(const Duration(days: 7));
+  DateTime userDate = DateTime.now();
+  String initialDropDownValueHours = 'choose Time';
+  List<String> oneHour = [
+    '12 Pm - 1 Pm',
+    '2 Pm - 3 Pm',
+    '4 Pm - 5 Pm',
+    '6 Pm - 7 Pm',
+    '8 Pm - 9 Pm',
+    '10 Pm - 11 Pm',
+    '12 Am - 1 Am',
+  ];
+  List<String> twoHour = [
+    '12 Pm - 2 Pm',
+    '3 Pm - 5 Pm',
+    '6 Pm - 8 Pm',
+    '9 Pm - 11 Pm',
+  ];
+  List<String> threeHour = [
+    '12 Pm - 3 Pm',
+    '4 Pm - 7 Pm',
+    '8 Pm - 11 Pm',
+  ];
+  List<String> fourHour = [
+    '12 Pm - 4 Pm',
+    '5 Pm - 9 Pm',
+    '9 Pm - 1 Am',
+  ];
   BookingItem(this.bookingData, {Key? key}) : super(key: key);
 
   @override
@@ -47,33 +74,55 @@ class _BookingItemState extends State<BookingItem> {
                   fontSize: 18,
                   fontWeight: FontWeight.bold),
             ),
+            const SizedBox(
+              height: 5,
+            ),
+            Text(
+              '${AppLocalizations.of(context)!.from} ${fromFormatDate()}',
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle1!
+                  .copyWith(color: Colors.white, fontSize: 18),
+            ),
+            const SizedBox(
+              width: 3,
+            ),
+            Text(
+              '${AppLocalizations.of(context)!.to} ${toFormatDate()}',
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle1!
+                  .copyWith(color: Colors.white, fontSize: 18),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              AppLocalizations.of(context)!.booked_date,
+              style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)!.from + fromFormatDate(),
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle1!
-                          .copyWith(color: Colors.white, fontSize: 18),
-                    ),
-                    const SizedBox(
-                      width: 3,
-                    ),
-                    Text(
-                      AppLocalizations.of(context)!.to + toFormatDate(),
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle1!
-                          .copyWith(color: Colors.white, fontSize: 18),
-                    ),
-                  ],
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.white),
+                  ),
+                  onPressed: () {
+                    showDateDialog();
+                  },
+                  child: Text(
+                    userFromFormatDate(),
+                    style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                        color: Theme.of(context).primaryColor, fontSize: 18),
+                  ),
                 ),
                 ElevatedButton(
                     onPressed: () {
-                      addBooking(widget.bookingData);
+                      checkRange();
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(Colors.white),
@@ -87,53 +136,26 @@ class _BookingItemState extends State<BookingItem> {
             const SizedBox(
               height: 10,
             ),
-            Text(
-              AppLocalizations.of(context)!.booked_date,
-              style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold),
-            ),
-            InkWell(
-              onTap: () {
-                showDateDialog();
-              },
-              child: Column(
-                children: [
-                  Text(
-                    AppLocalizations.of(context)!.from + userFromFormatDate(),
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1!
-                        .copyWith(color: Colors.white, fontSize: 18),
-                  ),
-                  const SizedBox(
-                    width: 3,
-                  ),
-                  Text(
-                    AppLocalizations.of(context)!.to + userToFormatDate(),
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1!
-                        .copyWith(color: Colors.white, fontSize: 18),
-                  ),
-                ],
-              ),
-            ),
+            DropDownButtonAdmin(
+                onChanged: (value) {
+                  widget.initialDropDownValueHours = value!;
+                },
+                dropDownList: checkLists(widget.bookingData))
           ],
         ),
       ),
     );
   }
 
+  // Data Handling
   UserBookingData userData(BookingData bookingData) {
     var user = FirebaseAuth.instance.currentUser;
     UserBookingData userBookingData = UserBookingData(
         id: bookingData.id,
         userId: user!.uid,
         stadium: bookingData.stadium,
-        userFromDate: widget.userStartDate,
-        userToDate: widget.userEndDate);
+        userDate: widget.userDate,
+        bookRange: widget.initialDropDownValueHours);
     return userBookingData;
   }
 
@@ -149,19 +171,26 @@ class _BookingItemState extends State<BookingItem> {
     });
   }
 
+  // constants
+  void checkRange() {
+    if (widget.userDate
+        .isBetween(widget.bookingData.fromDate, widget.bookingData.toDate)) {
+      addBooking(widget.bookingData);
+    } else {
+      showMessage(
+          AppLocalizations.of(context)!.this_day_is_not_available, context);
+    }
+  }
+
   void showDateDialog() async {
-    var newSelectedDate = await showDateRangePicker(
+    var newSelectedDate = await showDatePicker(
       context: context,
-      initialDateRange: DateTimeRange(
-          start: DateTime.now(),
-          end: DateTime.now().add(const Duration(days: 7))),
+      initialDate: widget.userDate,
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
     if (newSelectedDate != null) {
-      widget.userStartDate = newSelectedDate.start;
-      widget.userEndDate = newSelectedDate.end;
-
+      widget.userDate = newSelectedDate;
       setState(() {});
     }
   }
@@ -175,10 +204,18 @@ class _BookingItemState extends State<BookingItem> {
   }
 
   String userFromFormatDate() {
-    return DateFormat.yMMMEd().format(widget.userStartDate);
+    return DateFormat.yMMMEd().format(widget.userDate);
   }
 
-  String userToFormatDate() {
-    return DateFormat.yMMMEd().format(widget.userEndDate);
+  List<String> checkLists(BookingData bookingData) {
+    if (bookingData.hours == "1 Hours") {
+      return widget.oneHour;
+    } else if (bookingData.hours == "2 Hours") {
+      return widget.twoHour;
+    } else if (bookingData.hours == "3 Hours") {
+      return widget.threeHour;
+    } else {
+      return widget.fourHour;
+    }
   }
 }

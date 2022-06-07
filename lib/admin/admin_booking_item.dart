@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:booking_app/admin/admin_booking_details.dart';
 import 'package:booking_app/data/booking_data.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -12,7 +13,9 @@ class AdminBookingItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.pushNamed(context, AdminBookingDetails.ROUTE_NAME);
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Container(

@@ -1,4 +1,5 @@
 import 'package:booking_app/admin/add_booking_admin.dart';
+import 'package:booking_app/admin/admin_booking_details.dart';
 import 'package:booking_app/admin/admin_home.dart';
 import 'package:booking_app/home/home_screen.dart';
 import 'package:booking_app/login_register/login_screen.dart';
@@ -35,7 +36,9 @@ class MyApp extends StatelessWidget {
         RegisterScreen.ROUTE_NAME: (context) => const RegisterScreen(),
         AdminHome.ROUTE_NAME: (context) => const AdminHome(),
         AddBookingAdmin.ROUTE_NAME: (context) => const AddBookingAdmin(),
-        UserBooking.ROUTE_NAME: (context) => const UserBooking(),
+        UserBooking.ROUTE_NAME: (context) => UserBooking(),
+        AdminBookingDetails.ROUTE_NAME: (context) =>
+            const AdminBookingDetails(),
       },
       initialRoute: appProvider.isLoggedIn()
           ? HomeScreen.ROUTE_NAME

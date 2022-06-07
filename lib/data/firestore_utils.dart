@@ -31,10 +31,7 @@ CollectionReference<UserBookingData> getUserBookingCollectionWithConverter() {
 }
 
 Future<void> addBookingToFirestore(
-  String stadium,
-  DateTime fromDate,
-  DateTime toDate,
-) {
+    String stadium, DateTime fromDate, DateTime toDate, String hours) {
   CollectionReference<BookingData> collectionReference =
       getBookingCollectionWithConverter();
 
@@ -42,11 +39,11 @@ Future<void> addBookingToFirestore(
       collectionReference.doc(); // to create new object with new id
 
   BookingData data = BookingData(
-    id: documentReference.id,
-    stadium: stadium,
-    fromDate: fromDate,
-    toDate: toDate,
-  );
+      id: documentReference.id,
+      stadium: stadium,
+      fromDate: fromDate,
+      toDate: toDate,
+      hours: hours);
 
   return documentReference.set(data);
 }
@@ -73,4 +70,14 @@ Future<void> addUserBookingToFirebase(UserBookingData userBookingData) {
   UserBookingData data = userBookingData;
 
   return documentReference.set(data);
+}
+
+Future<void> updateBooking(BookingData bookingData) {
+  CollectionReference<BookingData> collectionReference =
+      getBookingCollectionWithConverter();
+
+  return collectionReference.doc(bookingData.id).update({
+    'fromDate': bookingData.fromDate.millisecondsSinceEpoch,
+    'toDate': bookingData.toDate.millisecondsSinceEpoch,
+  });
 }

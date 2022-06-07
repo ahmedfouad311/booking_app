@@ -31,10 +31,11 @@ class _HomeScreenState extends State<HomeScreen> {
     AppProvider languageProvider = Provider.of<AppProvider>(context);
     return Scaffold(
       appBar: AppBar(
-          centerTitle: true,
-          title: Text(
-            AppLocalizations.of(context)!.app_title,
-          )),
+        centerTitle: true,
+        title: Text(
+          AppLocalizations.of(context)!.app_title,
+        ),
+      ),
       drawer: Drawer(
         child: Column(
           children: [
@@ -97,9 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text(
                       AppLocalizations.of(context)!.sign_out,
-                      style: const TextStyle(
-                        fontSize: 18
-                      ),
+                      style: const TextStyle(fontSize: 18),
                     ),
                     const SizedBox(
                       width: 5,
@@ -116,22 +115,24 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: StreamBuilder<QuerySnapshot<UserBookingData>>(
           // for real time changes stream more efficient than future builder
-          stream: getUserBookingCollectionWithConverter().where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid).snapshots(),
+          stream: getUserBookingCollectionWithConverter()
+              .where('userId',
+                  isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+              .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Center(child: Text(snapshot.error.toString()));
             } else if (snapshot.hasData == false) {
-               return const Center(child: CircularProgressIndicator());
-            }
-            else{
+              return const Center(child: CircularProgressIndicator());
+            } else {
               List<UserBookingData> items =
-                snapshot.data!.docs.map((e) => e.data()).toList();
+                  snapshot.data!.docs.map((e) => e.data()).toList();
               return ListView.builder(
-              itemBuilder: (context, index) {
-                return HomeBookingItem(items[index]);
-              },
-              itemCount: items.length,
-            );
+                itemBuilder: (context, index) {
+                  return HomeBookingItem(items[index]);
+                },
+                itemCount: items.length,
+              );
             }
           },
         ),
@@ -148,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void logout(){
+  void logout() {
     Navigator.pushReplacementNamed(context, LoginScreen.ROUTE_NAME);
     FirebaseAuth.instance.signOut();
   }
