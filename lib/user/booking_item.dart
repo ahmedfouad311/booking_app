@@ -1,8 +1,11 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:developer';
+
 import 'package:booking_app/admin/drop_down_admin.dart';
 import 'package:booking_app/common/common_functions.dart';
 import 'package:booking_app/common/datetime_handler.dart';
+import 'package:booking_app/data/booked_data.dart';
 import 'package:booking_app/data/booking_data.dart';
 import 'package:booking_app/data/firestore_utils.dart';
 import 'package:booking_app/data/user_booking_data.dart';
@@ -14,8 +17,9 @@ import 'package:intl/intl.dart';
 class BookingItem extends StatefulWidget {
   BookingData bookingData;
   DateTime userDate = DateTime.now();
-  String initialDropDownValueHours = 'choose Time';
-  List<String> oneHour = [
+  String initialDropDownValueHours = '';
+
+  static List<String> oneHour = [
     '12 Pm - 1 Pm',
     '2 Pm - 3 Pm',
     '4 Pm - 5 Pm',
@@ -24,18 +28,18 @@ class BookingItem extends StatefulWidget {
     '10 Pm - 11 Pm',
     '12 Am - 1 Am',
   ];
-  List<String> twoHour = [
+  static List<String> twoHour = [
     '12 Pm - 2 Pm',
     '3 Pm - 5 Pm',
     '6 Pm - 8 Pm',
     '9 Pm - 11 Pm',
   ];
-  List<String> threeHour = [
+  static List<String> threeHour = [
     '12 Pm - 3 Pm',
     '4 Pm - 7 Pm',
     '8 Pm - 11 Pm',
   ];
-  List<String> fourHour = [
+  static List<String> fourHour = [
     '12 Pm - 4 Pm',
     '5 Pm - 9 Pm',
     '9 Pm - 1 Am',
@@ -47,6 +51,14 @@ class BookingItem extends StatefulWidget {
 }
 
 class _BookingItemState extends State<BookingItem> {
+  List<String> generatedList = [];
+  @override
+  Future<void> didChangeDependencies() async {
+    generatedList = await generateLists(widget.bookingData);
+    setState(() {});
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -113,6 +125,7 @@ class _BookingItemState extends State<BookingItem> {
                   ),
                   onPressed: () {
                     showDateDialog();
+                    setState(() {});
                   },
                   child: Text(
                     userFromFormatDate(),
@@ -137,10 +150,14 @@ class _BookingItemState extends State<BookingItem> {
               height: 10,
             ),
             DropDownButtonAdmin(
-                onChanged: (value) {
+              onChanged: (value) {
+                setState(() {
                   widget.initialDropDownValueHours = value!;
-                },
-                dropDownList: checkLists(widget.bookingData))
+                  log("selected item:$value");
+                });
+              },
+              dropDownList: generatedList,
+            )
           ],
         ),
       ),
@@ -151,16 +168,21 @@ class _BookingItemState extends State<BookingItem> {
   UserBookingData userData(BookingData bookingData) {
     var user = FirebaseAuth.instance.currentUser;
     UserBookingData userBookingData = UserBookingData(
-        id: bookingData.id,
-        userId: user!.uid,
-        stadium: bookingData.stadium,
-        userDate: widget.userDate,
-        bookRange: widget.initialDropDownValueHours);
+      id: bookingData.id,
+      userId: user!.uid,
+      stadium: bookingData.stadium,
+      userDate: widget.userDate,
+      bookRange: widget.initialDropDownValueHours,
+    );
     return userBookingData;
   }
 
   void addBooking(BookingData bookingData) {
-    addUserBookingToFirebase(userData(bookingData)).then((value) {
+    dynamic value = widget.initialDropDownValueHours;
+    addBookedData(BookedData(id: '1', bookedList: getList(value)));
+    addUserBookingToFirebase(userData(bookingData)).then((value) async {
+      generatedList = await generateLists(bookingData);
+      setState(() {});
       showMessage(
           AppLocalizations.of(context)!.booking_added_successfully, context);
     }).onError((error, stackTrace) {
@@ -169,6 +191,20 @@ class _BookingItemState extends State<BookingItem> {
       showMessage(
           AppLocalizations.of(context)!.cant_connect_to_the_server, context);
     });
+  }
+
+  addBookedData(BookedData bookedData) {
+    addBookedDataToFirebase(bookedData, widget.userDate).then((value) {
+      showMessage('List Created', context);
+    }).onError((error, stackTrace) {
+      showMessage('Error creating list', context);
+    });
+  }
+
+  List<dynamic> getList(dynamic item) {
+    List<dynamic> bookedList = [];
+    bookedList.add(item);
+    return bookedList;
   }
 
   // constants
@@ -207,15 +243,48 @@ class _BookingItemState extends State<BookingItem> {
     return DateFormat.yMMMEd().format(widget.userDate);
   }
 
-  List<String> checkLists(BookingData bookingData) {
+  void initLists() {
+    BookingItem.oneHour = [
+      '12 Pm - 1 Pm',
+      '2 Pm - 3 Pm',
+      '4 Pm - 5 Pm',
+      '6 Pm - 7 Pm',
+      '8 Pm - 9 Pm',
+      '10 Pm - 11 Pm',
+      '12 Am - 1 Am',
+    ];
+    BookingItem.twoHour = [
+      '12 Pm - 2 Pm',
+      '3 Pm - 5 Pm',
+      '6 Pm - 8 Pm',
+      '9 Pm - 11 Pm',
+    ];
+    BookingItem.threeHour = [
+      '12 Pm - 3 Pm',
+      '4 Pm - 7 Pm',
+      '8 Pm - 11 Pm',
+    ];
+    BookingItem.fourHour = [
+      '12 Pm - 4 Pm',
+      '5 Pm - 9 Pm',
+      '9 Pm - 1 Am',
+    ];
+  }
+
+  Future<List<String>> generateLists(BookingData bookingData) async {
+    // initLists();
     if (bookingData.hours == "1 Hours") {
-      return widget.oneHour;
+      await getBookedDataFromFirebase(BookingItem.oneHour, widget.userDate);
+      return BookingItem.oneHour;
     } else if (bookingData.hours == "2 Hours") {
-      return widget.twoHour;
+      await getBookedDataFromFirebase(BookingItem.twoHour, widget.userDate);
+      return BookingItem.twoHour;
     } else if (bookingData.hours == "3 Hours") {
-      return widget.threeHour;
+      await getBookedDataFromFirebase(BookingItem.threeHour, widget.userDate);
+      return BookingItem.threeHour;
     } else {
-      return widget.fourHour;
+      await getBookedDataFromFirebase(BookingItem.fourHour, widget.userDate);
+      return BookingItem.fourHour;
     }
   }
 }

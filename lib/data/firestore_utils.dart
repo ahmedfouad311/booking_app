@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:booking_app/data/booked_data.dart';
 import 'package:booking_app/data/booking_data.dart';
 import 'package:booking_app/data/user_booking_data.dart';
 import 'package:booking_app/data/user_data.dart';
@@ -28,6 +31,15 @@ CollectionReference<UserBookingData> getUserBookingCollectionWithConverter() {
           fromFirestore: (snapshot, _) =>
               UserBookingData.fromJson(snapshot.data()!),
           toFirestore: (data, _) => data.toJson());
+}
+
+CollectionReference<BookedData> getBookedDataCollectionWithConverter() {
+  return FirebaseFirestore.instance
+      .collection(BookedData.COLLECTION_NAME)
+      .withConverter(
+        fromFirestore: (snapshot, _) => BookedData.fromJson(snapshot.data()!),
+        toFirestore: (data, _) => data.toJson(),
+      );
 }
 
 Future<void> addBookingToFirestore(
@@ -70,6 +82,49 @@ Future<void> addUserBookingToFirebase(UserBookingData userBookingData) {
   UserBookingData data = userBookingData;
 
   return documentReference.set(data);
+}
+
+Future<void> addBookedDataToFirebase(
+    BookedData bookedData, DateTime userDate) async {
+  CollectionReference<BookedData> collectionReference =
+      getBookedDataCollectionWithConverter();
+
+  DocumentReference<BookedData> documentReference =
+      collectionReference.doc("booked");
+
+  QuerySnapshot querySnapshot = await collectionReference.get();
+  try {
+    final oldData =
+        querySnapshot.docs.map((doc) => doc.get('bookedList')).toList();
+
+    bookedData.update(oldData[0]);
+    BookedData data = bookedData;
+    return documentReference.set(data);
+  } catch (error) {
+    BookedData data = bookedData;
+    return documentReference.set(data);
+  }
+}
+
+Future<void> getBookedDataFromFirebase(
+    List<String> list, DateTime userDate) async {
+  CollectionReference<BookedData> collectionReference =
+      getBookedDataCollectionWithConverter();
+
+  DocumentReference<BookedData> documentReference =
+      collectionReference.doc('booked');
+
+  QuerySnapshot querySnapshot = await collectionReference.get();
+  final oldData =
+      querySnapshot.docs.map((doc) => doc.get('bookedList')).toList();
+  try {
+    for (dynamic itemBooked in oldData[0]) {
+      String word = itemBooked;
+      list.remove(word);
+      log(list.length.toString());
+      log('second index'+list[1]);
+    }
+  } catch (error) {}
 }
 
 Future<void> updateBooking(BookingData bookingData) {

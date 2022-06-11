@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors_in_immutables, must_be_immutable
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 class DropDownButtonAdmin extends StatefulWidget {
@@ -14,15 +16,20 @@ class DropDownButtonAdmin extends StatefulWidget {
 }
 
 class _DropDownButtonAdminState extends State<DropDownButtonAdmin> {
-  late String initialDropDownValue;
+  // late String initialDropDownValue;
   @override
   void initState() {
-    initialDropDownValue = widget.dropDownList[0];
+    // initialDropDownValue =
+    //     widget.dropDownList.isEmpty ? "" : widget.dropDownList[0];
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    // initialDropDownValue =
+    //     widget.dropDownList.isEmpty ? "" : widget.dropDownList[0];
+    log("Working list" + widget.dropDownList.toString());
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
@@ -39,7 +46,8 @@ class _DropDownButtonAdminState extends State<DropDownButtonAdmin> {
         fillColor: Colors.white,
       ),
       dropdownColor: Colors.white,
-      value: initialDropDownValue,
+      // value: initialDropDownValue == "" ? null : initialDropDownValue,
+      value: null,
       icon: Icon(
         Icons.arrow_downward,
         color: Theme.of(context).primaryColor,

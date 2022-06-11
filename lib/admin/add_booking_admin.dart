@@ -104,25 +104,25 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
                 const SizedBox(
                   height: 10,
                 ),
-                InkWell(
-                  onTap: () {
-                    showTimeDialog();
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "${AppLocalizations.of(context)!.from} ${startSelectedTime.hour}:${startSelectedTime.minute} - ",
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 2,
-                      ),
+                // InkWell(
+                //   onTap: () {
+                //     showTimeDialog();
+                //   },
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: [
+                      // Text(
+                      //   "${AppLocalizations.of(context)!.from} ${startSelectedTime.hour}:${startSelectedTime.minute} - ",
+                      //   textAlign: TextAlign.center,
+                      //   style: const TextStyle(
+                      //     fontSize: 16,
+                      //     color: Colors.black,
+                      //     fontWeight: FontWeight.bold,
+                      //   ),
+                      // ),
+                      // const SizedBox(
+                      //   width: 2,
+                      // ),
                       // Text(
                       //   "${AppLocalizations.of(context)!.to} ${endSelectedTime.hour}:${endSelectedTime.minute}",
                       //   textAlign: TextAlign.center,
@@ -132,9 +132,9 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
                       //     fontWeight: FontWeight.bold,
                       //   ),
                       // ),
-                    ],
-                  ),
-                ),
+                //     ],
+                //   ),
+                // ),
                 const SizedBox(
                   height: 20,
                 ),
