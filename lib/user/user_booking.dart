@@ -27,17 +27,17 @@ class _UserBookingState extends State<UserBooking> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(AppLocalizations.of(context)!.user_booking),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(
-              Icons.edit_calendar,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              showDateDialog();
-            },
-          )
-        ],
+        // actions: <Widget>[
+        //   IconButton(
+        //     icon: const Icon(
+        //       Icons.edit_calendar,
+        //       color: Colors.white,
+        //     ),
+        //     onPressed: () {
+        //       showDateDialog();
+        //     },
+        //   )
+        // ],
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),

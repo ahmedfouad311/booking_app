@@ -16,19 +16,19 @@ class DropDownButtonAdmin extends StatefulWidget {
 }
 
 class _DropDownButtonAdminState extends State<DropDownButtonAdmin> {
-  // late String initialDropDownValue;
+  late String initialDropDownValue;
   @override
   void initState() {
-    // initialDropDownValue =
-    //     widget.dropDownList.isEmpty ? "" : widget.dropDownList[0];
+    initialDropDownValue =
+        widget.dropDownList.isEmpty ? "" : widget.dropDownList[0];
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // initialDropDownValue =
-    //     widget.dropDownList.isEmpty ? "" : widget.dropDownList[0];
+    initialDropDownValue =
+        widget.dropDownList.isEmpty ? "" : widget.dropDownList[0];
     log("Working list" + widget.dropDownList.toString());
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(
@@ -46,8 +46,8 @@ class _DropDownButtonAdminState extends State<DropDownButtonAdmin> {
         fillColor: Colors.white,
       ),
       dropdownColor: Colors.white,
-      // value: initialDropDownValue == "" ? null : initialDropDownValue,
-      value: null,
+      value: initialDropDownValue == "" ? null : initialDropDownValue,
+      // value: null,
       icon: Icon(
         Icons.arrow_downward,
         color: Theme.of(context).primaryColor,

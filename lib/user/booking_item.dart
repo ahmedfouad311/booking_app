@@ -26,7 +26,6 @@ class BookingItem extends StatefulWidget {
     '6 Pm - 7 Pm',
     '8 Pm - 9 Pm',
     '10 Pm - 11 Pm',
-    '12 Am - 1 Am',
   ];
   static List<String> twoHour = [
     '12 Pm - 2 Pm',
@@ -243,36 +242,7 @@ class _BookingItemState extends State<BookingItem> {
     return DateFormat.yMMMEd().format(widget.userDate);
   }
 
-  void initLists() {
-    BookingItem.oneHour = [
-      '12 Pm - 1 Pm',
-      '2 Pm - 3 Pm',
-      '4 Pm - 5 Pm',
-      '6 Pm - 7 Pm',
-      '8 Pm - 9 Pm',
-      '10 Pm - 11 Pm',
-      '12 Am - 1 Am',
-    ];
-    BookingItem.twoHour = [
-      '12 Pm - 2 Pm',
-      '3 Pm - 5 Pm',
-      '6 Pm - 8 Pm',
-      '9 Pm - 11 Pm',
-    ];
-    BookingItem.threeHour = [
-      '12 Pm - 3 Pm',
-      '4 Pm - 7 Pm',
-      '8 Pm - 11 Pm',
-    ];
-    BookingItem.fourHour = [
-      '12 Pm - 4 Pm',
-      '5 Pm - 9 Pm',
-      '9 Pm - 1 Am',
-    ];
-  }
-
   Future<List<String>> generateLists(BookingData bookingData) async {
-    // initLists();
     if (bookingData.hours == "1 Hours") {
       await getBookedDataFromFirebase(BookingItem.oneHour, widget.userDate);
       return BookingItem.oneHour;
