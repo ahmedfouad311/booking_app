@@ -35,14 +35,14 @@ class AdminBookingItem extends StatelessWidget {
                 height: 20,
               ),
               Text(
-                AppLocalizations.of(context)!.from + fromFormatDate(),
+                '${AppLocalizations.of(context)!.from} ${fromFormatDate()}',
                 style: Theme.of(context)
                     .textTheme
                     .subtitle1!
                     .copyWith(color: Colors.white, fontSize: 20),
               ),
               Text(
-                AppLocalizations.of(context)!.to + toFormatDate(),
+                '${AppLocalizations.of(context)!.to} ${toFormatDate()}',
                 style: Theme.of(context)
                     .textTheme
                     .subtitle1!

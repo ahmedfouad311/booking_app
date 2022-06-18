@@ -1,0 +1,111 @@
+// ignore_for_file: must_be_immutable
+
+import 'dart:developer';
+
+import 'package:booking_app/common/common_functions.dart';
+import 'package:booking_app/data/booked_data.dart';
+import 'package:booking_app/data/booking_data.dart';
+import 'package:booking_app/data/firestore_utils.dart';
+import 'package:booking_app/data/user_booking_data.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+class TimeListScreen extends StatefulWidget {
+  BookingData bookingData;
+  DateTime userDate;
+  List deletedIndex = [];
+  TimeListScreen({Key? key, required this.bookingData, required this.userDate})
+      : super(key: key);
+
+  @override
+  State<TimeListScreen> createState() => _TimeListScreenState();
+}
+
+class _TimeListScreenState extends State<TimeListScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                    '${AppLocalizations.of(context)!.from}  ${widget.bookingData.timeRange[index]['start'].toString()}:00  -  ${AppLocalizations.of(context)!.to} ${widget.bookingData.timeRange[index]['end'].toString()}:00 ',
+                    style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16)),
+                ElevatedButton(
+                    onPressed: () {
+                      addBooking(widget.bookingData, index);
+                      setState(() {
+                        widget.bookingData.timeRange.removeAt(index);
+                      });
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.white),
+                    ),
+                    child: Text(
+                      AppLocalizations.of(context)!.book,
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    )),
+              ],
+            ),
+          );
+        },
+        itemCount: widget.bookingData.timeRange.length,
+      ),
+    );
+  }
+
+  UserBookingData userData(BookingData bookingData, int index) {
+    var user = FirebaseAuth.instance.currentUser;
+    UserBookingData userBookingData = UserBookingData(
+      id: bookingData.id,
+      userId: user!.uid,
+      stadium: bookingData.stadium,
+      userDate: widget.userDate,
+      timeRange: bookingData.timeRange[index],
+    );
+    return userBookingData;
+  }
+
+  void addBooking(BookingData bookingData, int index) {
+    // dynamic value = generatedList[widget.selectedIndex];
+    // addBookedData(BookedData(bookedList: getList(value)));
+    widget.deletedIndex.add(index);
+    deleteBookingData(widget.deletedIndex);
+    log('deleted..... ' + widget.deletedIndex.toString());
+    addUserBookingToFirebase(userData(bookingData, index)).then((value) async {
+      // generatedList = await generateLists(bookingData);
+      setState(() {});
+      showMessage(
+          AppLocalizations.of(context)!.booking_added_successfully, context);
+    }).onError((error, stackTrace) {
+      showMessage(AppLocalizations.of(context)!.error_adding_booking, context);
+    }).timeout(const Duration(seconds: 10), onTimeout: () {
+      showMessage(
+          AppLocalizations.of(context)!.cant_connect_to_the_server, context);
+    });
+  }
+
+  addBookedData(BookedData bookedData) {
+    addBookedDataToFirebase(bookedData, widget.userDate).then((value) {
+      showMessage('List Created', context);
+    }).onError((error, stackTrace) {
+      showMessage('Error creating list', context);
+    });
+  }
+
+  List<dynamic> getList(dynamic item) {
+    List<dynamic> bookedList = [];
+    bookedList.add(item);
+    return bookedList;
+  }
+}

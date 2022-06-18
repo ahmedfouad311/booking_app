@@ -42,8 +42,8 @@ CollectionReference<BookedData> getBookedDataCollectionWithConverter() {
       );
 }
 
-Future<void> addBookingToFirestore(
-    String stadium, DateTime fromDate, DateTime toDate, String hours) {
+Future<void> addBookingToFirestore(String stadium, DateTime fromDate,
+    DateTime toDate, int hours, List<Map<dynamic, dynamic>> timeRange) {
   CollectionReference<BookingData> collectionReference =
       getBookingCollectionWithConverter();
 
@@ -55,7 +55,8 @@ Future<void> addBookingToFirestore(
       stadium: stadium,
       fromDate: fromDate,
       toDate: toDate,
-      hours: hours);
+      hours: hours,
+      timeRange: timeRange);
 
   return documentReference.set(data);
 }
@@ -84,6 +85,14 @@ Future<void> addUserBookingToFirebase(UserBookingData userBookingData) {
   return documentReference.set(data);
 }
 
+Future<void> deleteBookingData(List list) {
+  CollectionReference<BookingData> collectionReference =
+      getBookingCollectionWithConverter();
+
+  DocumentReference documentReference = collectionReference.doc('id');
+  return documentReference.update({'timeRange': FieldValue.arrayRemove(list)});
+}
+
 Future<void> addBookedDataToFirebase(
     BookedData bookedData, DateTime userDate) async {
   CollectionReference<BookedData> collectionReference =
@@ -106,33 +115,31 @@ Future<void> addBookedDataToFirebase(
   }
 }
 
-Future<void> getBookedDataFromFirebase(
-    List<String> list, DateTime userDate) async {
-  CollectionReference<BookedData> collectionReference =
-      getBookedDataCollectionWithConverter();
+// Future<void> getBookedDataFromFirebase(
+//     List<String> list, DateTime userDate) async {
+//   CollectionReference<BookedData> collectionReference =
+//       getBookedDataCollectionWithConverter();
 
-  DocumentReference<BookedData> documentReference =
-      collectionReference.doc('booked');
+//   DocumentReference<BookedData> documentReference =
+//       collectionReference.doc('booked');
 
-  QuerySnapshot querySnapshot = await collectionReference.get();
-  final oldData =
-      querySnapshot.docs.map((doc) => doc.get('bookedList')).toList();
-  try {
-    for (dynamic itemBooked in oldData[0]) {
-      String word = itemBooked;
-      list.remove(word);
-      log(list.length.toString());
-      log('second index'+list[1]);
-    }
-  } catch (error) {}
-}
+//   QuerySnapshot querySnapshot = await collectionReference.get();
+//   final oldData =
+//       querySnapshot.docs.map((doc) => doc.get('bookedList')).toList();
+//   try {
+//     for (dynamic itemBooked in oldData[0]) {
+//       String word = itemBooked;
+//       list.remove(word);
+//     }
+//   } catch (error) {}
+// }
 
-Future<void> updateBooking(BookingData bookingData) {
-  CollectionReference<BookingData> collectionReference =
-      getBookingCollectionWithConverter();
+// Future<void> updateBooking(BookingData bookingData) {
+//   CollectionReference<BookingData> collectionReference =
+//       getBookingCollectionWithConverter();
 
-  return collectionReference.doc(bookingData.id).update({
-    'fromDate': bookingData.fromDate.millisecondsSinceEpoch,
-    'toDate': bookingData.toDate.millisecondsSinceEpoch,
-  });
-}
+//   return collectionReference.doc(bookingData.id).update({
+//     'fromDate': bookingData.fromDate.millisecondsSinceEpoch,
+//     'toDate': bookingData.toDate.millisecondsSinceEpoch,
+//   });
+// }

@@ -2,12 +2,16 @@
 
 import 'package:booking_app/admin/add_booking_admin.dart';
 import 'package:booking_app/admin/admin_booking_item.dart';
+import 'package:booking_app/common/selected_unselected_items/selected_item.dart';
+import 'package:booking_app/common/selected_unselected_items/unselected_item.dart';
 import 'package:booking_app/data/booking_data.dart';
 import 'package:booking_app/data/firestore_utils.dart';
 import 'package:booking_app/login_register/login_screen.dart';
+import 'package:booking_app/provider/app_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class AdminHome extends StatefulWidget {
   static const String ROUTE_NAME = 'Amin Home';
@@ -20,6 +24,7 @@ class AdminHome extends StatefulWidget {
 class _AdminHomeState extends State<AdminHome> {
   @override
   Widget build(BuildContext context) {
+    AppProvider languageProvider = Provider.of<AppProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -43,6 +48,37 @@ class _AdminHomeState extends State<AdminHome> {
                     .headline5!
                     .copyWith(color: Colors.white),
               ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: InkWell(
+                  onTap: () {
+                    languageProvider.changeLanguage('en');
+                  },
+                  child: languageProvider.defaultLanguage == 'en'
+                      ? SelectedItem(
+                          text: AppLocalizations.of(context)!.language_english)
+                      : UnselectedItem(
+                          text: AppLocalizations.of(context)!.language_english,
+                        )),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: InkWell(
+                  onTap: () {
+                    languageProvider.changeLanguage('ar');
+                  },
+                  child: languageProvider.defaultLanguage == 'ar'
+                      ? SelectedItem(
+                          text: AppLocalizations.of(context)!.language_arabic)
+                      : UnselectedItem(
+                          text: AppLocalizations.of(context)!.language_arabic)),
             ),
             const SizedBox(
               height: 20,

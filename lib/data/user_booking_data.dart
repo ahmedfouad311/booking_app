@@ -6,14 +6,14 @@ class UserBookingData {
   String userId;
   String stadium;
   DateTime userDate;
-  String bookRange;
+  Map timeRange;
 
   UserBookingData({
     required this.id,
     required this.userId,
     required this.stadium,
     required this.userDate,
-    required this.bookRange,
+    required this.timeRange,
   });
 
   UserBookingData.fromJson(Map<String, dynamic> json)
@@ -23,7 +23,7 @@ class UserBookingData {
             stadium: json['stadium']! as String,
             userDate: DateTime.fromMillisecondsSinceEpoch(
                 json['userFromDate']! as int),
-            bookRange: json['bookRange']! as String);
+            timeRange: json['timeRange']! as Map);
 
   Map<String, dynamic> toJson() {
     return {
@@ -31,7 +31,7 @@ class UserBookingData {
       'userId': userId,
       'stadium': stadium,
       'userFromDate': userDate.millisecondsSinceEpoch,
-      'bookRange': bookRange,
+      'timeRange': timeRange,
     };
   }
 }

@@ -1,5 +1,7 @@
 // ignore_for_file: constant_identifier_names, must_be_immutable, unused_local_variable, avoid_print
 
+import 'dart:developer';
+
 import 'package:booking_app/admin/drop_down_admin.dart';
 import 'package:booking_app/common/common_functions.dart';
 import 'package:booking_app/data/firestore_utils.dart';
@@ -9,8 +11,9 @@ import 'package:time_range_picker/time_range_picker.dart';
 
 class AddBookingAdmin extends StatefulWidget {
   static const String ROUTE_NAME = 'Add Booking Admin';
+  late List<int> timeList = [1, 2, 3, 4];
 
-  const AddBookingAdmin({Key? key}) : super(key: key);
+  AddBookingAdmin({Key? key}) : super(key: key);
 
   @override
   State<AddBookingAdmin> createState() => _AddBookingAdminState();
@@ -18,7 +21,7 @@ class AddBookingAdmin extends StatefulWidget {
 
 class _AddBookingAdminState extends State<AddBookingAdmin> {
   String initialDropDownValue = 'Cairo International Stadium';
-  String initialDropDownValueHours = '1 Hour';
+  int initialDropDownValueHours = 1;
   DateTime startSelectedDate = DateTime.now();
   DateTime endSelectedDate = DateTime.now().add(const Duration(days: 7));
   TimeOfDay startSelectedTime = TimeOfDay.now();
@@ -104,52 +107,78 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
                 const SizedBox(
                   height: 10,
                 ),
-                // InkWell(
-                //   onTap: () {
-                //     showTimeDialog();
-                //   },
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     children: [
-                      // Text(
-                      //   "${AppLocalizations.of(context)!.from} ${startSelectedTime.hour}:${startSelectedTime.minute} - ",
-                      //   textAlign: TextAlign.center,
-                      //   style: const TextStyle(
-                      //     fontSize: 16,
-                      //     color: Colors.black,
-                      //     fontWeight: FontWeight.bold,
-                      //   ),
-                      // ),
-                      // const SizedBox(
-                      //   width: 2,
-                      // ),
-                      // Text(
-                      //   "${AppLocalizations.of(context)!.to} ${endSelectedTime.hour}:${endSelectedTime.minute}",
-                      //   textAlign: TextAlign.center,
-                      //   style: const TextStyle(
-                      //     fontSize: 16,
-                      //     color: Colors.black,
-                      //     fontWeight: FontWeight.bold,
-                      //   ),
-                      // ),
-                //     ],
-                //   ),
-                // ),
+                InkWell(
+                  onTap: () {
+                    showTimeDialog();
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "${AppLocalizations.of(context)!.from} ${startSelectedTime.hour}:${startSelectedTime.minute} - ",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 2,
+                      ),
+                      Text(
+                        "${AppLocalizations.of(context)!.to} ${endSelectedTime.hour}:${endSelectedTime.minute}",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 const SizedBox(
                   height: 20,
                 ),
-                DropDownButtonAdmin(
+                DropdownButtonFormField<int>(
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Theme.of(context).primaryColor, width: 2),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Theme.of(context).primaryColor, width: 2),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
+                  dropdownColor: Colors.white,
+                  value: initialDropDownValueHours == 0
+                      ? null
+                      : initialDropDownValueHours,
+                  // value: null,
+                  icon: Icon(
+                    Icons.arrow_downward,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  elevation: 16,
+                  style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.bold),
                   onChanged: (value) {
-                    setState(() {
-                      initialDropDownValueHours = value!;
-                    });
+                    initialDropDownValueHours = value!;
                   },
-                  dropDownList: const [
-                    '1 Hours',
-                    '2 Hours',
-                    '3 Hours',
-                    '4 Hours',
-                  ],
+                  items:
+                      widget.timeList.map<DropdownMenuItem<int>>((int value) {
+                    return DropdownMenuItem<int>(
+                      value: value,
+                      child: Text(value.toString()),
+                    );
+                  }).toList(),
                 ),
                 const SizedBox(
                   height: 30,
@@ -176,7 +205,7 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
 
   void addBooking() {
     addBookingToFirestore(initialDropDownValue, startSelectedDate,
-            endSelectedDate, initialDropDownValueHours)
+            endSelectedDate, initialDropDownValueHours, generateListMaps())
         .then((value) {
       // print('Timeeeeeeeee ${Timestamp.fromDate(startSelectedDate).toDate()}');
       // print('Timeeeeeeeee2 ${Timestamp.fromDate(endSelectedDate).toDate()}');
@@ -251,5 +280,60 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
           fontStyle: FontStyle.italic,
           fontWeight: FontWeight.bold),
     );
+  }
+
+  List<Map<dynamic, dynamic>> generateListMaps() {
+    List<Map<dynamic, dynamic>> list = <Map>[];
+    // int startTime = (startSelectedTime.hour > 12)
+    //     ? (startSelectedTime.hour - 12)
+    //     : startSelectedTime.hour;
+    int startTime = startSelectedTime.hour;
+    int endTime = endSelectedTime.hour;
+    int tempStartTime = startSelectedTime.hour;
+
+    if (startTime > 12 && endTime < 12) {
+      startTime -= 12;
+      endTime += 12;
+    }
+    for (int i = startTime;
+        i >= startTime && i <= endTime;
+        i += initialDropDownValueHours) {
+      if (tempStartTime >= 24) {
+        tempStartTime -= 24;
+      }
+      list.add({
+        'start': tempStartTime,
+        'end': checkvalue(
+          input: tempStartTime + initialDropDownValueHours,
+      
+        ),
+      });
+      log("start Time:" +
+          tempStartTime.toString() +
+          " End time" +
+          checkvalue(
+            input: tempStartTime + initialDropDownValueHours,
+           
+          ).toString());
+      tempStartTime += initialDropDownValueHours;
+    }
+    if (list.last["end"] > endSelectedTime.hour) {
+      Map mapHolder = list.last;
+       mapHolder.update("end", (value) => "");
+      list.last =mapHolder;
+    }
+    return list.toList();
+  }
+}
+
+int checkvalue({
+  required int input,
+ 
+}) {
+ 
+  if (input >= 24) {
+    return input - 24;
+  } else {
+    return input;
   }
 }

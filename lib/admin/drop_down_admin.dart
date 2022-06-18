@@ -29,7 +29,7 @@ class _DropDownButtonAdminState extends State<DropDownButtonAdmin> {
   Widget build(BuildContext context) {
     initialDropDownValue =
         widget.dropDownList.isEmpty ? "" : widget.dropDownList[0];
-    log("Working list" + widget.dropDownList.toString());
+    // log("Working list" + widget.dropDownList.toString());
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(

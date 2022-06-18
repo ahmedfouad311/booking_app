@@ -3,6 +3,7 @@
 import 'package:booking_app/data/user_booking_data.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeBookingItem extends StatefulWidget {
   UserBookingData userBookingData;
@@ -44,7 +45,7 @@ class _HomeBookingItemState extends State<HomeBookingItem> {
               height: 5,
             ),
             Text(
-              widget.userBookingData.bookRange,
+              '${AppLocalizations.of(context)!.from} ${widget.userBookingData.timeRange['start'].toString()}:00  -  ${AppLocalizations.of(context)!.from}} ${widget.userBookingData.timeRange['end'].toString()}:00',
               style: Theme.of(context)
                   .textTheme
                   .subtitle1!

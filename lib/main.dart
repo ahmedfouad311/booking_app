@@ -5,6 +5,7 @@ import 'package:booking_app/home/home_screen.dart';
 import 'package:booking_app/login_register/login_screen.dart';
 import 'package:booking_app/login_register/register_screen.dart';
 import 'package:booking_app/provider/app_provider.dart';
+import 'package:booking_app/user/time_book_screen.dart';
 import 'package:booking_app/user/user_booking.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -35,14 +36,15 @@ class MyApp extends StatelessWidget {
         LoginScreen.ROUTE_NAME: (context) => const LoginScreen(),
         RegisterScreen.ROUTE_NAME: (context) => const RegisterScreen(),
         AdminHome.ROUTE_NAME: (context) => const AdminHome(),
-        AddBookingAdmin.ROUTE_NAME: (context) => const AddBookingAdmin(),
+        AddBookingAdmin.ROUTE_NAME: (context) =>  AddBookingAdmin(),
         UserBooking.ROUTE_NAME: (context) => UserBooking(),
-        AdminBookingDetails.ROUTE_NAME: (context) =>
-            const AdminBookingDetails(),
+        AdminBookingDetails.ROUTE_NAME: (context) => const AdminBookingDetails(),
+        TimeBookScreen.ROUTE_NAME: (context) => const TimeBookScreen(),
       },
-      initialRoute: appProvider.isLoggedIn()
-          ? HomeScreen.ROUTE_NAME
-          : LoginScreen.ROUTE_NAME,
+      // initialRoute: appProvider.isLoggedIn()
+      //     ? HomeScreen.ROUTE_NAME
+      //     : LoginScreen.ROUTE_NAME,
+      initialRoute: LoginScreen.ROUTE_NAME,
     );
   }
 }
