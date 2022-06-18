@@ -80,7 +80,7 @@ class _TimeListScreenState extends State<TimeListScreen> {
     // dynamic value = generatedList[widget.selectedIndex];
     // addBookedData(BookedData(bookedList: getList(value)));
     widget.deletedIndex.add(index);
-    deleteBookingData(widget.deletedIndex);
+    deleteBookingData(bookingData,widget.deletedIndex);
     log('deleted..... ' + widget.deletedIndex.toString());
     addUserBookingToFirebase(userData(bookingData, index)).then((value) async {
       // generatedList = await generateLists(bookingData);

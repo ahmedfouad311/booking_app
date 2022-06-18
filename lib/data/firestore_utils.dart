@@ -85,11 +85,11 @@ Future<void> addUserBookingToFirebase(UserBookingData userBookingData) {
   return documentReference.set(data);
 }
 
-Future<void> deleteBookingData(List list) {
+Future<void> deleteBookingData(BookingData bookingData, List list) {
   CollectionReference<BookingData> collectionReference =
       getBookingCollectionWithConverter();
 
-  DocumentReference documentReference = collectionReference.doc('id');
+  DocumentReference documentReference = collectionReference.doc(bookingData.id);
   return documentReference.update({'timeRange': FieldValue.arrayRemove(list)});
 }
 
