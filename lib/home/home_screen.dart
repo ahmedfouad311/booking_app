@@ -127,25 +127,46 @@ class _HomeScreenState extends State<HomeScreen> {
             } else {
               List<UserBookingData> items =
                   snapshot.data!.docs.map((e) => e.data()).toList();
-              return ListView.builder(
-                itemBuilder: (context, index) {
-                  return HomeBookingItem(items[index]);
-                },
-                itemCount: items.length,
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      itemBuilder: (context, index) {
+                        return HomeBookingItem(items[index]);
+                      },
+                      itemCount: items.length,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FloatingActionButton(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      onPressed: () {
+                        // Navigator.pushNamed(context, UserBooking.ROUTE_NAME,arguments:snapshot.data,
+                        //);
+                        Navigator.of(context).push(MaterialPageRoute(builder: (cxt)=>UserBooking(userBookingData:items,),),);
+                      },
+                      child: const Icon(
+                        Icons.add,
+                      ),
+                    ),
+                  ),
+                ],
               );
             }
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        onPressed: () {
-          Navigator.pushNamed(context, UserBooking.ROUTE_NAME);
-        },
-        child: const Icon(
-          Icons.add,
-        ),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   backgroundColor: Theme.of(context).primaryColor,
+      //   onPressed: () {
+      //     Navigator.pushNamed(context, UserBooking.ROUTE_NAME);
+      //   },
+      //   child: const Icon(
+      //     Icons.add,
+      //   ),
+      // ),
     );
   }
 

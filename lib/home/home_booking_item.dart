@@ -45,7 +45,7 @@ class _HomeBookingItemState extends State<HomeBookingItem> {
               height: 5,
             ),
             Text(
-              '${AppLocalizations.of(context)!.from} ${widget.userBookingData.timeRange['start'].toString()}:00  -  ${AppLocalizations.of(context)!.from}} ${widget.userBookingData.timeRange['end'].toString()}:00',
+              '${AppLocalizations.of(context)!.from} ${widget.userBookingData.timeRange['start'].toString()}:00  -  ${AppLocalizations.of(context)!.from} ${widget.userBookingData.timeRange['end'].toString()}:00',
               style: Theme.of(context)
                   .textTheme
                   .subtitle1!

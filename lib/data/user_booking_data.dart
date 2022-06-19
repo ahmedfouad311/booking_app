@@ -22,7 +22,7 @@ class UserBookingData {
             userId: json['userId']! as String,
             stadium: json['stadium']! as String,
             userDate: DateTime.fromMillisecondsSinceEpoch(
-                json['userFromDate']! as int),
+                json['userDate']! as int),
             timeRange: json['timeRange']! as Map);
 
   Map<String, dynamic> toJson() {
@@ -30,7 +30,7 @@ class UserBookingData {
       'id': id,
       'userId': userId,
       'stadium': stadium,
-      'userFromDate': userDate.millisecondsSinceEpoch,
+      'userDate': userDate.millisecondsSinceEpoch,
       'timeRange': timeRange,
     };
   }

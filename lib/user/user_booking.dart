@@ -2,6 +2,7 @@
 
 import 'package:booking_app/data/booking_data.dart';
 import 'package:booking_app/data/firestore_utils.dart';
+import 'package:booking_app/data/user_booking_data.dart';
 import 'package:booking_app/user/booking_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +10,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UserBooking extends StatefulWidget {
   static const String ROUTE_NAME = 'User Booking Screen';
-
+  final List<UserBookingData> userBookingData;
   late BookingData bookingData;
   late DateTime userDate = DateTime.now();
   UserBooking({
-    Key? key,
+    Key? key, required this.userBookingData,
   }) : super(key: key);
 
   @override
@@ -54,7 +55,7 @@ class _UserBookingState extends State<UserBooking> {
                   snapshot.data!.docs.map((e) => e.data()).toList();
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  return BookingItem(items[index]);
+                  return BookingItem(items[index], userBookingData: widget.userBookingData,userDate: DateTime.now(),);
                 },
                 itemCount: items.length,
               );
@@ -63,18 +64,5 @@ class _UserBookingState extends State<UserBooking> {
         ),
       ),
     );
-  }
-
-  void showDateDialog() async {
-    var newSelectedDate = await showDatePicker(
-      context: context,
-      initialDate: widget.userDate,
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-    );
-    if (newSelectedDate != null) {
-      widget.userDate = newSelectedDate;
-      setState(() {});
-    }
   }
 }

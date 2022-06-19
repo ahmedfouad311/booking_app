@@ -305,7 +305,6 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
         'start': tempStartTime,
         'end': checkvalue(
           input: tempStartTime + initialDropDownValueHours,
-      
         ),
       });
       log("start Time:" +
@@ -313,14 +312,14 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
           " End time" +
           checkvalue(
             input: tempStartTime + initialDropDownValueHours,
-           
           ).toString());
       tempStartTime += initialDropDownValueHours;
     }
     if (list.last["end"] > endSelectedTime.hour) {
-      Map mapHolder = list.last;
-       mapHolder.update("end", (value) => "");
-      list.last =mapHolder;
+      // Map mapHolder = list.last;
+      //  mapHolder.update("end", (value) => endSelectedTime.hour);
+      // list.last =mapHolder;
+      list.removeLast();
     }
     return list.toList();
   }
@@ -328,9 +327,7 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
 
 int checkvalue({
   required int input,
- 
 }) {
- 
   if (input >= 24) {
     return input - 24;
   } else {

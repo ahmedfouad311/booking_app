@@ -1,9 +1,11 @@
 // ignore_for_file: must_be_immutable
 
+
 import 'package:booking_app/common/common_functions.dart';
 import 'package:booking_app/common/datetime_handler.dart';
 import 'package:booking_app/data/booked_data.dart';
 import 'package:booking_app/data/booking_data.dart';
+import 'package:booking_app/data/user_booking_data.dart';
 import 'package:booking_app/user/time_book_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -12,10 +14,10 @@ import 'package:intl/intl.dart';
 class BookingItem extends StatefulWidget {
   BookingData bookingData;
   late BookedData bookedData;
-  DateTime userDate = DateTime.now();
+  DateTime userDate;
   String initialDropDownValueHours = '';
   int selectedIndex = 0;
-
+  final List<UserBookingData> userBookingData;
   // static List<String> oneHour = [
   //   '12 Pm - 1 Pm',
   //   '2 Pm - 3 Pm',
@@ -40,7 +42,8 @@ class BookingItem extends StatefulWidget {
   //   '5 Pm - 9 Pm',
   //   '9 Pm - 1 Am',
   // ];
-  BookingItem(this.bookingData, {Key? key}) : super(key: key);
+  BookingItem(this.bookingData, {Key? key, required this.userBookingData, required this.userDate})
+      : super(key: key);
 
   @override
   State<BookingItem> createState() => _BookingItemState();
@@ -181,12 +184,16 @@ class _BookingItemState extends State<BookingItem> {
     );
   }
 
-  
   void checkRange() {
     if (widget.userDate
         .isBetween(widget.bookingData.fromDate, widget.bookingData.toDate)) {
       // addBooking(widget.bookingData);
-      Navigator.pushNamed(context, TimeBookScreen.ROUTE_NAME, arguments: BookingItem(widget.bookingData));
+      Navigator.pushNamed(context, TimeBookScreen.ROUTE_NAME,
+          arguments: BookingItem(
+            widget.bookingData,
+            userBookingData: widget.userBookingData,
+            userDate: widget.userDate,
+          ));
     } else {
       showMessage(
           AppLocalizations.of(context)!.this_day_is_not_available, context);

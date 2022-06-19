@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         RegisterScreen.ROUTE_NAME: (context) => const RegisterScreen(),
         AdminHome.ROUTE_NAME: (context) => const AdminHome(),
         AddBookingAdmin.ROUTE_NAME: (context) =>  AddBookingAdmin(),
-        UserBooking.ROUTE_NAME: (context) => UserBooking(),
+        UserBooking.ROUTE_NAME: (context) => UserBooking(userBookingData: const [],),
         AdminBookingDetails.ROUTE_NAME: (context) => const AdminBookingDetails(),
         TimeBookScreen.ROUTE_NAME: (context) => const TimeBookScreen(),
       },

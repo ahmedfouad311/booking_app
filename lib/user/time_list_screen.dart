@@ -7,22 +7,41 @@ import 'package:booking_app/data/booked_data.dart';
 import 'package:booking_app/data/booking_data.dart';
 import 'package:booking_app/data/firestore_utils.dart';
 import 'package:booking_app/data/user_booking_data.dart';
+import 'package:booking_app/home/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 
 class TimeListScreen extends StatefulWidget {
   BookingData bookingData;
   DateTime userDate;
   List deletedIndex = [];
-  TimeListScreen({Key? key, required this.bookingData, required this.userDate})
-      : super(key: key);
+  final List<UserBookingData> userBookingData;
+  TimeListScreen({
+    Key? key,
+    required this.bookingData,
+    required this.userDate,
+    required this.userBookingData,
+  }) : super(key: key);
 
   @override
   State<TimeListScreen> createState() => _TimeListScreenState();
 }
 
 class _TimeListScreenState extends State<TimeListScreen> {
+  List filteredTimeRanges = [];
+  @override
+  void initState() {
+    filteredTimeRanges = widget.bookingData.timeRange
+        .where((timeRange) => widget.userBookingData
+            .where((userBookingData) =>
+                userBookingData.timeRange["start"] == timeRange["start"])
+            .isEmpty)
+        .toList();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -36,7 +55,7 @@ class _TimeListScreenState extends State<TimeListScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                    '${AppLocalizations.of(context)!.from}  ${widget.bookingData.timeRange[index]['start'].toString()}:00  -  ${AppLocalizations.of(context)!.to} ${widget.bookingData.timeRange[index]['end'].toString()}:00 ',
+                    '${AppLocalizations.of(context)!.from}  ${filteredTimeRanges[index]['start'].toString()}:00  -  ${AppLocalizations.of(context)!.to} ${filteredTimeRanges[index]['end'].toString()}:00 ',
                     style: const TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -59,7 +78,7 @@ class _TimeListScreenState extends State<TimeListScreen> {
             ),
           );
         },
-        itemCount: widget.bookingData.timeRange.length,
+        itemCount: filteredTimeRanges.length,
       ),
     );
   }
@@ -73,6 +92,7 @@ class _TimeListScreenState extends State<TimeListScreen> {
       userDate: widget.userDate,
       timeRange: bookingData.timeRange[index],
     );
+    log(widget.userDate.toString());
     return userBookingData;
   }
 
@@ -80,13 +100,28 @@ class _TimeListScreenState extends State<TimeListScreen> {
     // dynamic value = generatedList[widget.selectedIndex];
     // addBookedData(BookedData(bookedList: getList(value)));
     widget.deletedIndex.add(index);
-    deleteBookingData(bookingData,widget.deletedIndex);
+    deleteBookingData(bookingData, widget.deletedIndex);
     log('deleted..... ' + widget.deletedIndex.toString());
     addUserBookingToFirebase(userData(bookingData, index)).then((value) async {
       // generatedList = await generateLists(bookingData);
       setState(() {});
-      showMessage(
-          AppLocalizations.of(context)!.booking_added_successfully, context);
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Text(AppLocalizations.of(context)!.booking_added_successfully),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(
+                      context, HomeScreen.ROUTE_NAME);
+                },
+                child: const Text('ok'),
+              ),
+            ],
+          );
+        },
+      );
     }).onError((error, stackTrace) {
       showMessage(AppLocalizations.of(context)!.error_adding_booking, context);
     }).timeout(const Duration(seconds: 10), onTimeout: () {
@@ -107,5 +142,9 @@ class _TimeListScreenState extends State<TimeListScreen> {
     List<dynamic> bookedList = [];
     bookedList.add(item);
     return bookedList;
+  }
+
+  String userFromFormatDate() {
+    return DateFormat.yMMMEd().format(widget.userDate);
   }
 }
