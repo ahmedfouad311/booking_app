@@ -6,9 +6,11 @@ import 'package:booking_app/common/selected_unselected_items/selected_item.dart'
 import 'package:booking_app/common/selected_unselected_items/unselected_item.dart';
 import 'package:booking_app/data/booking_data.dart';
 import 'package:booking_app/data/firestore_utils.dart';
-import 'package:booking_app/login_register/login_screen.dart';
+import 'package:booking_app/login_register/admin/login_admin_screen.dart';
 import 'package:booking_app/provider/app_provider.dart';
+import 'package:booking_app/welcome_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -87,8 +89,7 @@ class _AdminHomeState extends State<AdminHome> {
               padding: const EdgeInsets.all(10.0),
               child: InkWell(
                 onTap: (() {
-                  Navigator.pushReplacementNamed(
-                      context, LoginScreen.ROUTE_NAME);
+                  logout();
                 }),
                 child: Row(
                   children: [
@@ -142,5 +143,10 @@ class _AdminHomeState extends State<AdminHome> {
         ),
       ),
     );
+  }
+
+  void logout() {
+    Navigator.pushReplacementNamed(context, WelcomeScreen.ROUTE_NAME);
+    FirebaseAuth.instance.signOut();
   }
 }

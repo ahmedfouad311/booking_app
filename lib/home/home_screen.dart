@@ -5,7 +5,7 @@ import 'package:booking_app/common/selected_unselected_items/unselected_item.dar
 import 'package:booking_app/data/firestore_utils.dart';
 import 'package:booking_app/data/user_booking_data.dart';
 import 'package:booking_app/home/home_booking_item.dart';
-import 'package:booking_app/login_register/login_screen.dart';
+import 'package:booking_app/login_register/admin/login_admin_screen.dart';
 import 'package:booking_app/provider/app_provider.dart';
 import 'package:booking_app/user/user_booking.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -171,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void logout() {
-    Navigator.pushReplacementNamed(context, LoginScreen.ROUTE_NAME);
+    Navigator.pushReplacementNamed(context, LoginAdminScreen.ROUTE_NAME);
     FirebaseAuth.instance.signOut();
   }
 }
