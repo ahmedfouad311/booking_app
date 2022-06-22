@@ -6,7 +6,6 @@ import 'package:booking_app/common/selected_unselected_items/selected_item.dart'
 import 'package:booking_app/common/selected_unselected_items/unselected_item.dart';
 import 'package:booking_app/data/booking_data.dart';
 import 'package:booking_app/data/firestore_utils.dart';
-import 'package:booking_app/login_register/admin/login_admin_screen.dart';
 import 'package:booking_app/provider/app_provider.dart';
 import 'package:booking_app/welcome_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

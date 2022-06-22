@@ -28,9 +28,9 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
       color: Colors.white,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
+          title: const Text(
             'create user account',
-            style: const TextStyle(fontSize: 25),
+            style: TextStyle(fontSize: 25),
           ),
         ),
         body: Padding(
@@ -175,7 +175,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                             Navigator.pushReplacementNamed(
                                     context, HomeScreen.ROUTE_NAME)
                                 .catchError((e) {
-                              print('Errorrrrrrrrrr');
+                              log('Errorrrrrrrrrr');
                             }));
                       },
                       child: Text(AppLocalizations.of(context)!.done),
@@ -192,12 +192,12 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
               .then((value) => Navigator.pushReplacementNamed(
                   context, HomeScreen.ROUTE_NAME))
               .catchError((e) {
-            print('Errorrrrrrrrrrrrr 2');
+            log('Errorrrrrrrrrrrrr 2');
           });
         },
         verificationFailed: (FirebaseAuthException error) {
           if (error.code == 'invalid-phone-number') {
-            print('The provided phone number is not valid.');
+            log('The provided phone number is not valid.');
           }
         },
       );

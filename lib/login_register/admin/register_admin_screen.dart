@@ -1,6 +1,5 @@
 // ignore_for_file: non_constant_identifier_names, avoid_print, constant_identifier_names
 
-import 'dart:developer';
 
 import 'package:booking_app/admin/admin_home.dart';
 import 'package:booking_app/common/common_functions.dart';
@@ -8,7 +7,6 @@ import 'package:booking_app/data/firestore_utils.dart';
 import 'package:booking_app/data/user_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../../home/home_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RegisterAdminScreen extends StatefulWidget {

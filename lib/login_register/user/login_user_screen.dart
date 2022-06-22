@@ -1,8 +1,5 @@
-// ignore_for_file: constant_identifier_names
+// ignore_for_file: constant_identifier_names, must_be_immutable
 
-import 'dart:developer';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -26,9 +23,9 @@ class _LoginUserScreenState extends State<LoginUserScreen> {
       color: Colors.white,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
+          title: const Text(
             'login user',
-            style: const TextStyle(fontSize: 25),
+            style: TextStyle(fontSize: 25),
           ),
         ),
         body: Padding(
@@ -66,7 +63,7 @@ class _LoginUserScreenState extends State<LoginUserScreen> {
                   ElevatedButton(
                     onPressed: () {
                       if (widget.formKey.currentState?.validate() == true) {
-                        loginWithPhone();
+                        // loginWithPhone();
                       }
                     },
                     child: Padding(
@@ -89,53 +86,6 @@ class _LoginUserScreenState extends State<LoginUserScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  void loginWithPhone() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    auth.verifyPhoneNumber(
-      phoneNumber: widget.arguments,
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        await auth.signInWithCredential(credential).then((value) {
-          print("You are logged in successfully");
-        });
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        print(e.message);
-      },
-      codeSent: (String verificationId, int? resendToken) {
-        widget.verification = verificationId;
-        setState(() {});
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {},
-    );
-  }
-
-  void verify() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    var result = await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: widget.arguments,
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        await auth.signInWithCredential(credential);
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        if (e.code == 'invalid-phone-number') {
-          print('The provided phone number is not valid.');
-        }
-      },
-      codeSent: (String verificationId, int? resendToken) async {
-        String smsCode = '5555';
-
-        // Create a PhoneAuthCredential with the code
-        PhoneAuthCredential credential = PhoneAuthProvider.credential(
-            verificationId: verificationId, smsCode: smsCode);
-
-        // Sign the user in (or link) with the credential
-        await auth.signInWithCredential(credential);
-      },
-      timeout: const Duration(seconds: 60),
-      codeAutoRetrievalTimeout: (String verificationId) {},
     );
   }
 }

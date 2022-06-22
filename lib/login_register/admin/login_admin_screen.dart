@@ -4,8 +4,6 @@ import 'package:booking_app/admin/admin_home.dart';
 import 'package:booking_app/common/common_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../../home/home_screen.dart';
-import 'register_admin_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginAdminScreen extends StatefulWidget {
