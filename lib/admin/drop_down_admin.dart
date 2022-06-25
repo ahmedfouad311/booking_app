@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors_in_immutables, must_be_immutable
 
+import 'package:booking_app/Theme/theme_data.dart';
 import 'package:flutter/material.dart';
 
 class DropDownButtonAdmin extends StatefulWidget {
@@ -27,17 +28,21 @@ class _DropDownButtonAdminState extends State<DropDownButtonAdmin> {
   Widget build(BuildContext context) {
     initialDropDownValue =
         widget.dropDownList.isEmpty ? "" : widget.dropDownList[0];
-    // log("Working list" + widget.dropDownList.toString());
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
           borderSide:
-              BorderSide(color: Theme.of(context).primaryColor, width: 2),
+              const BorderSide(color: MyThemeData.PRIMARY_COLOR, width: 2),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              const BorderSide(color: MyThemeData.PRIMARY_COLOR, width: 2),
           borderRadius: BorderRadius.circular(20),
         ),
         border: OutlineInputBorder(
           borderSide:
-              BorderSide(color: Theme.of(context).primaryColor, width: 2),
+              const BorderSide(color: MyThemeData.PRIMARY_COLOR, width: 2),
           borderRadius: BorderRadius.circular(20),
         ),
         filled: true,
@@ -46,13 +51,13 @@ class _DropDownButtonAdminState extends State<DropDownButtonAdmin> {
       dropdownColor: Colors.white,
       value: initialDropDownValue == "" ? null : initialDropDownValue,
       // value: null,
-      icon: Icon(
+      icon: const Icon(
         Icons.arrow_downward,
-        color: Theme.of(context).primaryColor,
+        color: MyThemeData.PRIMARY_COLOR,
       ),
       elevation: 16,
-      style: TextStyle(
-          color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),
+      style: const TextStyle(
+          color: MyThemeData.PRIMARY_COLOR, fontWeight: FontWeight.bold),
       onChanged: widget.onChanged,
       items: widget.dropDownList.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(

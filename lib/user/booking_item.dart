@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 
+import 'package:booking_app/Theme/theme_data.dart';
 import 'package:booking_app/common/common_functions.dart';
 import 'package:booking_app/common/datetime_handler.dart';
 import 'package:booking_app/data/booked_data.dart';
@@ -18,30 +19,6 @@ class BookingItem extends StatefulWidget {
   String initialDropDownValueHours = '';
   int selectedIndex = 0;
   final List<UserBookingData> userBookingData;
-  // static List<String> oneHour = [
-  //   '12 Pm - 1 Pm',
-  //   '2 Pm - 3 Pm',
-  //   '4 Pm - 5 Pm',
-  //   '6 Pm - 7 Pm',
-  //   '8 Pm - 9 Pm',
-  //   '10 Pm - 11 Pm',
-  // ];
-  // static List<String> twoHour = [
-  //   '12 Pm - 2 Pm',
-  //   '3 Pm - 5 Pm',
-  //   '6 Pm - 8 Pm',
-  //   '9 Pm - 11 Pm',
-  // ];
-  // static List<String> threeHour = [
-  //   '12 Pm - 3 Pm',
-  //   '4 Pm - 7 Pm',
-  //   '8 Pm - 11 Pm',
-  // ];
-  // static List<String> fourHour = [
-  //   '12 Pm - 4 Pm',
-  //   '5 Pm - 9 Pm',
-  //   '9 Pm - 1 Am',
-  // ];
   BookingItem(this.bookingData, {Key? key, required this.userBookingData, required this.userDate})
       : super(key: key);
 
@@ -64,7 +41,7 @@ class _BookingItemState extends State<BookingItem> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Container(
         padding: const EdgeInsets.all(20),
-        color: Theme.of(context).primaryColor,
+        color: MyThemeData.PRIMARY_COLOR,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -120,8 +97,10 @@ class _BookingItemState extends State<BookingItem> {
               children: [
                 ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.white),
-                  ),
+                        backgroundColor: MaterialStateProperty.all(
+                            Colors.white),
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)))),
                   onPressed: () {
                     showDateDialog();
                     setState(() {});
@@ -129,7 +108,7 @@ class _BookingItemState extends State<BookingItem> {
                   child: Text(
                     userFromFormatDate(),
                     style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                        color: Theme.of(context).primaryColor, fontSize: 18),
+                        color: MyThemeData.PRIMARY_COLOR, fontSize: 18),
                   ),
                 ),
                 ElevatedButton(
@@ -137,47 +116,16 @@ class _BookingItemState extends State<BookingItem> {
                       checkRange();
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.white),
-                    ),
+                        backgroundColor: MaterialStateProperty.all(
+                            Colors.white),
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)))),
                     child: Text(
                       AppLocalizations.of(context)!.book,
-                      style: TextStyle(color: Theme.of(context).primaryColor),
+                      style: const TextStyle(color: MyThemeData.PRIMARY_COLOR),
                     )),
               ],
             ),
-            // ListView.builder(
-            //   shrinkWrap: true,
-            //   itemBuilder: (context, index) {
-            //     return Center(
-            //       child: Padding(
-            //         padding: const EdgeInsets.symmetric(vertical: 4),
-            //         child: InkWell(
-            //           onTap: () {
-            //             widget.selectedIndex = index;
-            //             setState(() {});
-            //           },
-            //           child: Text(generatedList[index].toString(),
-            //               style: TextStyle(
-            //                   color: widget.selectedIndex == index
-            //                       ? Colors.red
-            //                       : Colors.white,
-            //                   fontWeight: FontWeight.bold,
-            //                   fontSize: 16)),
-            //         ),
-            //       ),
-            //     );
-            //   },
-            //   itemCount: generatedList.length,
-            // ),
-            // DropDownButtonAdmin(
-            //   onChanged: (value) {
-            //     setState(() {
-            //       widget.initialDropDownValueHours = value!;
-            //       log("selected item:$value");
-            //     });
-            //   },
-            //   dropDownList: generatedList,
-            // )
           ],
         ),
       ),
@@ -224,63 +172,4 @@ class _BookingItemState extends State<BookingItem> {
   String userFromFormatDate() {
     return DateFormat.yMMMEd().format(widget.userDate);
   }
-
-  // Data Handling
-  // UserBookingData userData(BookingData bookingData) {
-  //   var user = FirebaseAuth.instance.currentUser;
-  //   UserBookingData userBookingData = UserBookingData(
-  //     id: bookingData.id,
-  //     userId: user!.uid,
-  //     stadium: bookingData.stadium,
-  //     userDate: widget.userDate,
-  //     timeRange: generatedList[widget.selectedIndex],
-  //   );
-  //   return userBookingData;
-  // }
-
-  // void addBooking(BookingData bookingData) {
-  //   dynamic value = generatedList[widget.selectedIndex];
-  //   addBookedData(BookedData(bookedList: getList(value)));
-  //   addUserBookingToFirebase(userData(bookingData)).then((value) async {
-  //     generatedList = await generateLists(bookingData);
-  //     setState(() {});
-  //     showMessage(
-  //         AppLocalizations.of(context)!.booking_added_successfully, context);
-  //   }).onError((error, stackTrace) {
-  //     showMessage(AppLocalizations.of(context)!.error_adding_booking, context);
-  //   }).timeout(const Duration(seconds: 10), onTimeout: () {
-  //     showMessage(
-  //         AppLocalizations.of(context)!.cant_connect_to_the_server, context);
-  //   });
-  // }
-
-  // addBookedData(BookedData bookedData) {
-  //   addBookedDataToFirebase(bookedData, widget.userDate).then((value) {
-  //     showMessage('List Created', context);
-  //   }).onError((error, stackTrace) {
-  //     showMessage('Error creating list', context);
-  //   });
-  // }
-
-  // List<dynamic> getList(dynamic item) {
-  //   List<dynamic> bookedList = [];
-  //   bookedList.add(item);
-  //   return bookedList;
-  // }
-
-  // Future<List<String>> generateLists(BookingData bookingData) async {
-  //   if (bookingData.hours == "1 Hours") {
-  //     // await getBookedDataFromFirebase(BookingItem.oneHour, widget.userDate);
-  //     return BookingItem.oneHour;
-  //   } else if (bookingData.hours == "2 Hours") {
-  //     // await getBookedDataFromFirebase(BookingItem.twoHour, widget.userDate);
-  //     return BookingItem.twoHour;
-  //   } else if (bookingData.hours == "3 Hours") {
-  //     // await getBookedDataFromFirebase(BookingItem.threeHour, widget.userDate);
-  //     return BookingItem.threeHour;
-  //   } else {
-  //     // await getBookedDataFromFirebase(BookingItem.fourHour, widget.userDate);
-  //     return BookingItem.fourHour;
-  //   }
-  // }
 }

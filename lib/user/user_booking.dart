@@ -1,5 +1,6 @@
 // ignore_for_file: constant_identifier_names, must_be_immutable
 
+import 'package:booking_app/Theme/theme_data.dart';
 import 'package:booking_app/data/booking_data.dart';
 import 'package:booking_app/data/firestore_utils.dart';
 import 'package:booking_app/data/user_booking_data.dart';
@@ -26,24 +27,13 @@ class _UserBookingState extends State<UserBooking> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: MyThemeData.PRIMARY_COLOR,
         centerTitle: true,
         title: Text(AppLocalizations.of(context)!.user_booking),
-        // actions: <Widget>[
-        //   IconButton(
-        //     icon: const Icon(
-        //       Icons.edit_calendar,
-        //       color: Colors.white,
-        //     ),
-        //     onPressed: () {
-        //       showDateDialog();
-        //     },
-        //   )
-        // ],
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: StreamBuilder<QuerySnapshot<BookingData>>(
-          // for real time changes stream more efficient than future builder
           stream: getBookingCollectionWithConverter().snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {

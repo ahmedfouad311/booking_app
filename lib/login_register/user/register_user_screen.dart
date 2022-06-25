@@ -2,6 +2,7 @@
 
 import 'dart:developer';
 
+import 'package:booking_app/Theme/theme_data.dart';
 import 'package:booking_app/common/common_functions.dart';
 import 'package:booking_app/home/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,19 +19,23 @@ class RegisterUserScreen extends StatefulWidget {
 }
 
 class _RegisterUserScreenState extends State<RegisterUserScreen> {
-  String phone = '';
-  String smsCode = '';
+  late String verification;
+  late String smsCode;
+  String name = '';
+  late String arguments;
   var formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    arguments = ModalRoute.of(context)!.settings.arguments as String;
     return Container(
       color: Colors.white,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'create user account',
-            style: TextStyle(fontSize: 25),
+          backgroundColor: MyThemeData.PRIMARY_COLOR,
+          title: Text(
+            AppLocalizations.of(context)!.register,
+            style: const TextStyle(fontSize: 25),
           ),
         ),
         body: Padding(
@@ -48,28 +53,34 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                     height: 8,
                   ),
                   TextFormField(
+                    cursorColor: MyThemeData.PRIMARY_COLOR,
                     onChanged: (text) {
-                      phone = text;
+                      name = text;
                     },
                     validator: (text) {
                       if (text == null || text.trim().isEmpty) {
-                        return AppLocalizations.of(context)!
-                            .please_enter_your_email;
-                      }
-                      if (!isPhone(phone)) {
-                        return AppLocalizations.of(context)!
-                            .please_enter_a_vaild_email_address_or_phone_number;
+                        return AppLocalizations.of(context)!.please_enter_a_name;
                       }
                       return null;
                     },
-                    decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.the_email,
+                    decoration:  InputDecoration(
+                      labelText: AppLocalizations.of(context)!.name,
+                      labelStyle: const TextStyle(color: MyThemeData.PRIMARY_COLOR),
+                      focusedBorder: const UnderlineInputBorder(
+                        borderSide:
+                            BorderSide(color: MyThemeData.PRIMARY_COLOR),
+                      ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 30,
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.06,
                   ),
                   ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            MyThemeData.PRIMARY_COLOR),
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)))),
                     onPressed: () {
                       if (formKey.currentState?.validate() == true) {
                         createAccountWithFireBaseAuth();
@@ -81,9 +92,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         // ignore: prefer_const_literals_to_create_immutables
                         children: [
-                          Text(
-                            AppLocalizations.of(context)!.create_account_button,
-                          ),
+                          Text(AppLocalizations.of(context)!.verfiy),
                           const Icon(Icons.arrow_forward),
                         ],
                       ),
@@ -98,63 +107,33 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
     );
   }
 
-  // void verifyOTP() async {
-  //   PhoneAuthCredential credential = PhoneAuthProvider.credential(
-  //       verificationId: verificationID, smsCode: otpController.text);
-
-  //   await auth.signInWithCredential(credential).then(
-  //     (value) {
-  //       setState(() {
-  //         user = FirebaseAuth.instance.currentUser;
-  //       });
-  //     },
-  //   ).whenComplete(
-  //     () {
-  //       if (user != null) {
-  //         Fluttertoast.showToast(
-  //           msg: "You are logged in successfully",
-  //           toastLength: Toast.LENGTH_SHORT,
-  //           gravity: ToastGravity.BOTTOM,
-  //           timeInSecForIosWeb: 1,
-  //           backgroundColor: Colors.red,
-  //           textColor: Colors.white,
-  //           fontSize: 16.0,
-  //         );
-  //         Navigator.pushReplacement(
-  //           context,
-  //           MaterialPageRoute(
-  //             builder: (context) => Home(),
-  //           ),
-  //         );
-  //       } else {
-  //         Fluttertoast.showToast(
-  //           msg: "your login is failed",
-  //           toastLength: Toast.LENGTH_SHORT,
-  //           gravity: ToastGravity.BOTTOM,
-  //           timeInSecForIosWeb: 1,
-  //           backgroundColor: Colors.red,
-  //           textColor: Colors.white,
-  //           fontSize: 16.0,
-  //         );
-  //       }
-  //     },
-  //   );
-  // }
-
   void createAccountWithFireBaseAuth() async {
     try {
       showLoading(context);
-      var auth = FirebaseAuth.instance;
-      await auth.verifyPhoneNumber(
-        phoneNumber: phone,
-        codeAutoRetrievalTimeout: (String verificationId) {},
+      FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: '+20' + arguments,
+        verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async {
+          log(phoneAuthCredential.providerId);
+          await FirebaseAuth.instance
+              .signInWithCredential(phoneAuthCredential)
+              .then((value) => Navigator.pushReplacementNamed(
+                  context, HomeScreen.ROUTE_NAME))
+              .catchError((e) {
+            log('Errorrrrrrrrrrrrr 2');
+          });
+        },
+        verificationFailed: (FirebaseAuthException error) {
+          if (error.code == 'invalid-phone-number') {
+            log('The provided phone number is not valid.');
+          }
+        },
         codeSent: (String verificationId, int? forceResendingToken) async {
           showDialog(
               context: context,
               barrierDismissible: false,
               builder: (context) {
                 return AlertDialog(
-                  title: Text(AppLocalizations.of(context)!.enter_SMS_code),
+                  title: Text(AppLocalizations.of(context)!.enter_SMS_code, style: const TextStyle(color: MyThemeData.PRIMARY_COLOR),),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -167,6 +146,11 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                   ),
                   actions: [
                     ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            MyThemeData.PRIMARY_COLOR),
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)))),
                       onPressed: () {
                         FirebaseAuth auth = FirebaseAuth.instance;
                         var credential = PhoneAuthProvider.credential(
@@ -184,44 +168,11 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                 );
               });
         },
-        timeout: const Duration(seconds: 60),
-        verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async {
-          log(phoneAuthCredential.providerId);
-          await auth
-              .signInWithCredential(phoneAuthCredential)
-              .then((value) => Navigator.pushReplacementNamed(
-                  context, HomeScreen.ROUTE_NAME))
-              .catchError((e) {
-            log('Errorrrrrrrrrrrrr 2');
-          });
-        },
-        verificationFailed: (FirebaseAuthException error) {
-          if (error.code == 'invalid-phone-number') {
-            log('The provided phone number is not valid.');
-          }
-        },
+        codeAutoRetrievalTimeout: (String verificationId) {},
       );
-      hideLoading(context);
-      // if (true) {
-      //   var myUser = UserData(
-      //     id: auth.currentUser!.uid,
-      //     // ha7ot nafs el id el ma3molo save fe el auth
-      //     name: name,
-      //     email: email,
-      //     password: password,
-      //   );
-      //   addUserTOFireStore(myUser).then((value) {
-      //     // provider.updateUser(myUser);
-      //     showMessage('User Registered Successfully!', context);
-      //     Navigator.pushReplacementNamed(context, LoginScreen.ROUTE_NAME);
-      //   }).onError((error, stackTrace) {
-      //     showMessage(error.toString(), context);
-      //   });
-      // }
-
     } catch (error) {
       hideLoading(context);
-      showMessage(error.toString(), context);
+      showMessage(AppLocalizations.of(context)!.invalid_email_or_phone, context);
     }
   }
 }

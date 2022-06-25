@@ -2,6 +2,7 @@
 
 import 'dart:developer';
 
+import 'package:booking_app/Theme/theme_data.dart';
 import 'package:booking_app/admin/drop_down_admin.dart';
 import 'package:booking_app/common/common_functions.dart';
 import 'package:booking_app/data/firestore_utils.dart';
@@ -33,6 +34,7 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        backgroundColor: MyThemeData.PRIMARY_COLOR,
         title: Text(
           AppLocalizations.of(context)!.add_booking_admin,
         ),
@@ -144,13 +146,18 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
                 DropdownButtonFormField<int>(
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: Theme.of(context).primaryColor, width: 2),
+                      borderSide: const BorderSide(
+                          color: MyThemeData.PRIMARY_COLOR, width: 2),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                          color: MyThemeData.PRIMARY_COLOR, width: 2),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: Theme.of(context).primaryColor, width: 2),
+                      borderSide: const BorderSide(
+                          color: MyThemeData.PRIMARY_COLOR, width: 2),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     filled: true,
@@ -161,13 +168,13 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
                       ? null
                       : initialDropDownValueHours,
                   // value: null,
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.arrow_downward,
-                    color: Theme.of(context).primaryColor,
+                    color: MyThemeData.PRIMARY_COLOR,
                   ),
                   elevation: 16,
-                  style: TextStyle(
-                      color: Theme.of(context).primaryColor,
+                  style: const TextStyle(
+                      color: MyThemeData.PRIMARY_COLOR,
                       fontWeight: FontWeight.bold),
                   onChanged: (value) {
                     initialDropDownValueHours = value!;
@@ -184,6 +191,11 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
                   height: 30,
                 ),
                 ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(MyThemeData.PRIMARY_COLOR),
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)))),
                   onPressed: () {
                     addBooking();
                   },
@@ -256,8 +268,8 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
       padding: 30,
       strokeWidth: 20,
       handlerRadius: 14,
-      strokeColor: Theme.of(context).primaryColor,
-      handlerColor: Theme.of(context).primaryColor,
+      strokeColor: MyThemeData.PRIMARY_COLOR,
+      handlerColor: MyThemeData.PRIMARY_COLOR,
       selectedColor: Colors.white,
       backgroundColor: Colors.black.withOpacity(0.3),
       ticks: 12,

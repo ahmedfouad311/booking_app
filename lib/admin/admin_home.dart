@@ -1,5 +1,6 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:booking_app/Theme/theme_data.dart';
 import 'package:booking_app/admin/add_booking_admin.dart';
 import 'package:booking_app/admin/admin_booking_item.dart';
 import 'package:booking_app/common/selected_unselected_items/selected_item.dart';
@@ -28,6 +29,7 @@ class _AdminHomeState extends State<AdminHome> {
     AppProvider languageProvider = Provider.of<AppProvider>(context);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: MyThemeData.PRIMARY_COLOR,
         title: Text(
           AppLocalizations.of(context)!.admin_home,
         ),
@@ -36,8 +38,8 @@ class _AdminHomeState extends State<AdminHome> {
         child: Column(
           children: [
             Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
+              decoration: const BoxDecoration(
+                color: MyThemeData.PRIMARY_COLOR,
               ),
               padding: const EdgeInsets.symmetric(vertical: 35),
               width: double.infinity,
@@ -110,7 +112,6 @@ class _AdminHomeState extends State<AdminHome> {
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: StreamBuilder<QuerySnapshot<BookingData>>(
-          // for real time changes stream more efficient than future builder
           stream: getBookingCollectionWithConverter().snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
@@ -133,7 +134,7 @@ class _AdminHomeState extends State<AdminHome> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: MyThemeData.PRIMARY_COLOR,
         onPressed: () {
           Navigator.pushNamed(context, AddBookingAdmin.ROUTE_NAME);
         },

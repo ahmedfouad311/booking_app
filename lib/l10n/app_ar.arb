@@ -46,5 +46,16 @@
     "invaild_email_or_password": "بريد الكتروني او كلمة مرور غير صحيحة",
     "admin_logged_in_successfully": "الادمن سجل دخول بنجاح",
     "this_day_is_not_available": "هذا اليوم غير متاح للحجز",
-    "time_book_screen": "شاشة حجز التوقيت"
+    "time_book_screen": "شاشة حجز التوقيت",
+    "welcome_to_football_booking_app": "مرحبا بك في برنامج حجز المبارايات",
+    "lets_get_started": "هيا بنا نبدأ",
+    "next": "التالي",
+    "email_or_phone": "البريد الالكتروني او الهاتف",
+    "getting_started": "هيا نبدأ",
+    "invalid_email_or_phone": "بريد الكتروني او هاتف غير صحيح",
+    "verfiy": "تأكيد",
+    "name": "الاسم",
+    "please_enter_a_name": "من فضلك ادخل اسم",
+    "register": "حجز",
+    "ok": "تم"
 }

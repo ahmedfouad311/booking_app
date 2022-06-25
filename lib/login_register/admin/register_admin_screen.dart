@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, avoid_print, constant_identifier_names
 
 
+import 'package:booking_app/Theme/theme_data.dart';
 import 'package:booking_app/admin/admin_home.dart';
 import 'package:booking_app/common/common_functions.dart';
 import 'package:booking_app/data/firestore_utils.dart';
@@ -22,7 +23,6 @@ class _RegisterAdminScreenState extends State<RegisterAdminScreen> {
   String email = '';
   String password = '';
   bool passwordVisible = false;
-  String smsCode = '';
 
   var formKey = GlobalKey<FormState>();
 
@@ -32,6 +32,7 @@ class _RegisterAdminScreenState extends State<RegisterAdminScreen> {
       color: Colors.white,
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: MyThemeData.PRIMARY_COLOR,
           title: Text(
             AppLocalizations.of(context)!.create_account_button,
             style: const TextStyle(fontSize: 25),
@@ -49,6 +50,7 @@ class _RegisterAdminScreenState extends State<RegisterAdminScreen> {
                     height: MediaQuery.of(context).size.height * 0.20,
                   ),
                   TextFormField(
+                    cursorColor: MyThemeData.PRIMARY_COLOR,
                     onChanged: (text) {
                       email = text;
                     },
@@ -65,12 +67,18 @@ class _RegisterAdminScreenState extends State<RegisterAdminScreen> {
                     },
                     decoration: InputDecoration(
                       labelText: AppLocalizations.of(context)!.the_email,
+                      labelStyle: const TextStyle(color: MyThemeData.PRIMARY_COLOR),
+                      focusedBorder: const UnderlineInputBorder(
+                        borderSide:
+                            BorderSide(color: MyThemeData.PRIMARY_COLOR),
+                      ),
                     ),
                   ),
                   const SizedBox(
                     height: 8,
                   ),
                   TextFormField(
+                    cursorColor: MyThemeData.PRIMARY_COLOR,
                     obscureText: !passwordVisible,
                     onChanged: (text) {
                       password = text;
@@ -95,12 +103,23 @@ class _RegisterAdminScreenState extends State<RegisterAdminScreen> {
                           },
                           child: const Icon(Icons.remove_red_eye)),
                       labelText: AppLocalizations.of(context)!.the_password,
+                      labelStyle: const TextStyle(color: MyThemeData.PRIMARY_COLOR),
+                      focusedBorder: const UnderlineInputBorder(
+                        borderSide:
+                            BorderSide(color: MyThemeData.PRIMARY_COLOR),
+                      ),
+                      suffixIconColor: MyThemeData.PRIMARY_COLOR
                     ),
                   ),
                   const SizedBox(
                     height: 30,
                   ),
                   ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            MyThemeData.PRIMARY_COLOR),
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)))),
                     onPressed: () {
                       if (formKey.currentState?.validate() == true) {
                         createAccountWithFirebaseAuthEmailAndPass();
@@ -155,110 +174,4 @@ class _RegisterAdminScreenState extends State<RegisterAdminScreen> {
       showMessage(error.toString(), context);
     }
   }
-
-  // void CreateAccountWithFireBaseAuth() async {
-  //   try {
-  //     showLoading(context);
-  //     if (isValidEmail(email)) {
-  //       var result = await FirebaseAuth.instance
-  //           .createUserWithEmailAndPassword(email: email, password: password);
-  //       // to register the user to FireStore
-  //       hideLoading(context);
-  //       if (result.user != null) {
-  //         var myUser = UserData(
-  //             id: result.user!.uid,
-  //             // ha7ot nafs el id el ma3molo save fe el auth
-  //             userInput: email,);
-  //         addUserTOFireStore(myUser).then((value) {
-  //           // provider.updateUser(myUser);
-  //           showMessage(
-  //               AppLocalizations.of(context)!.user_registered_successfully,
-  //               context);
-  //           Navigator.pushReplacementNamed(context, HomeScreen.ROUTE_NAME);
-  //         }).onError((error, stackTrace) {
-  //           showMessage(error.toString(), context);
-  //         });
-  //       }
-  //     } else if (isPhone(email)) {
-  //       var auth = FirebaseAuth.instance;
-  //       await auth.verifyPhoneNumber(
-  //         phoneNumber: email,
-  //         codeAutoRetrievalTimeout: (String verificationId) {},
-  //         codeSent: (String verificationId, int? forceResendingToken) async {
-  //           showDialog(
-  //               context: context,
-  //               barrierDismissible: false,
-  //               builder: (context) {
-  //                 return AlertDialog(
-  //                   title: Text(AppLocalizations.of(context)!.enter_SMS_code),
-  //                   content: Column(
-  //                     mainAxisSize: MainAxisSize.min,
-  //                     children: [
-  //                       TextField(
-  //                         onChanged: (text) {
-  //                           smsCode = text;
-  //                         },
-  //                       ),
-  //                     ],
-  //                   ),
-  //                   actions: [
-  //                     ElevatedButton(
-  //                       onPressed: () {
-  //                         FirebaseAuth auth = FirebaseAuth.instance;
-  //                         var credential = PhoneAuthProvider.credential(
-  //                             verificationId: verificationId, smsCode: smsCode);
-  //                         auth.signInWithCredential(credential).then((value) =>
-  //                             Navigator.pushReplacementNamed(
-  //                                     context, HomeScreen.ROUTE_NAME)
-  //                                 .catchError((e) {
-  //                               print('Errorrrrrrrrrr');
-  //                             }));
-  //                       },
-  //                       child: Text(AppLocalizations.of(context)!.done),
-  //                     )
-  //                   ],
-  //                 );
-  //               });
-  //         },
-  //         timeout: const Duration(seconds: 60),
-  //         verificationCompleted:
-  //             (PhoneAuthCredential phoneAuthCredential) async {
-  //           log(phoneAuthCredential.providerId);
-  //           await auth
-  //               .signInWithCredential(phoneAuthCredential)
-  //               .then((value) => Navigator.pushReplacementNamed(
-  //                   context, HomeScreen.ROUTE_NAME))
-  //               .catchError((e) {
-  //             print('Errorrrrrrrrrrrrr 2');
-  //           });
-  //         },
-  //         verificationFailed: (FirebaseAuthException error) {
-  //           if (error.code == 'invalid-phone-number') {
-  //             print('The provided phone number is not valid.');
-  //           }
-  //         },
-  //       );
-  //       hideLoading(context);
-  //       // if (true) {
-  //       //   var myUser = UserData(
-  //       //     id: auth.currentUser!.uid,
-  //       //     // ha7ot nafs el id el ma3molo save fe el auth
-  //       //     name: name,
-  //       //     email: email,
-  //       //     password: password,
-  //       //   );
-  //       //   addUserTOFireStore(myUser).then((value) {
-  //       //     // provider.updateUser(myUser);
-  //       //     showMessage('User Registered Successfully!', context);
-  //       //     Navigator.pushReplacementNamed(context, LoginScreen.ROUTE_NAME);
-  //       //   }).onError((error, stackTrace) {
-  //       //     showMessage(error.toString(), context);
-  //       //   });
-  //       // }
-  //     }
-  //   } catch (error) {
-  //     hideLoading(context);
-  //     showMessage(error.toString(), context);
-  //   }
-  // }
 }

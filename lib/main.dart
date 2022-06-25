@@ -1,14 +1,14 @@
+
 import 'package:booking_app/admin/add_booking_admin.dart';
-import 'package:booking_app/admin/admin_booking_details.dart';
 import 'package:booking_app/admin/admin_home.dart';
 import 'package:booking_app/home/home_screen.dart';
 import 'package:booking_app/login_register/admin/register_admin_screen.dart';
 import 'package:booking_app/login_register/admin/login_admin_screen.dart';
-import 'package:booking_app/login_register/user/login_user_screen.dart';
 import 'package:booking_app/login_register/user/register_user_screen.dart';
 import 'package:booking_app/provider/app_provider.dart';
 import 'package:booking_app/user/time_book_screen.dart';
 import 'package:booking_app/user/user_booking.dart';
+import 'package:booking_app/signin_screen.dart';
 import 'package:booking_app/welcome_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -36,15 +36,14 @@ class MyApp extends StatelessWidget {
       locale: Locale(appProvider.defaultLanguage),
       routes: {
         WelcomeScreen.ROUTE_NAME: (context) => const WelcomeScreen(),
+        SigninScreen.ROUTE_NAME: (context) => const SigninScreen(),
         HomeScreen.ROUTE_NAME: (context) => const HomeScreen(),
         LoginAdminScreen.ROUTE_NAME: (context) => const LoginAdminScreen(),
         RegisterAdminScreen.ROUTE_NAME: (context) => const RegisterAdminScreen(),
-        LoginUserScreen.ROUTE_NAME:(context) =>  LoginUserScreen(),
         RegisterUserScreen.ROUTE_NAME:(context) => const RegisterUserScreen(),
         AdminHome.ROUTE_NAME: (context) => const AdminHome(),
         AddBookingAdmin.ROUTE_NAME: (context) =>  AddBookingAdmin(),
         UserBooking.ROUTE_NAME: (context) => UserBooking(userBookingData: const [],),
-        AdminBookingDetails.ROUTE_NAME: (context) => const AdminBookingDetails(),
         TimeBookScreen.ROUTE_NAME: (context) => const TimeBookScreen(),
       },
       // initialRoute: appProvider.isLoggedIn()

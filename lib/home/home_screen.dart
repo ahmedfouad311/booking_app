@@ -1,13 +1,14 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:booking_app/Theme/theme_data.dart';
 import 'package:booking_app/common/selected_unselected_items/selected_item.dart';
 import 'package:booking_app/common/selected_unselected_items/unselected_item.dart';
 import 'package:booking_app/data/firestore_utils.dart';
 import 'package:booking_app/data/user_booking_data.dart';
 import 'package:booking_app/home/home_booking_item.dart';
-import 'package:booking_app/login_register/admin/login_admin_screen.dart';
 import 'package:booking_app/provider/app_provider.dart';
 import 'package:booking_app/user/user_booking.dart';
+import 'package:booking_app/welcome_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
     AppProvider languageProvider = Provider.of<AppProvider>(context);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: MyThemeData.PRIMARY_COLOR,
         centerTitle: true,
         title: Text(
           AppLocalizations.of(context)!.app_title,
@@ -40,8 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
+              decoration: const BoxDecoration(
+                color: MyThemeData.PRIMARY_COLOR,
               ),
               padding: const EdgeInsets.symmetric(vertical: 35),
               width: double.infinity,
@@ -141,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: FloatingActionButton(
-                      backgroundColor: Theme.of(context).primaryColor,
+                      backgroundColor: MyThemeData.PRIMARY_COLOR,
                       onPressed: () {
                         // Navigator.pushNamed(context, UserBooking.ROUTE_NAME,arguments:snapshot.data,
                         //);
@@ -171,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void logout() {
-    Navigator.pushReplacementNamed(context, LoginAdminScreen.ROUTE_NAME);
+    Navigator.pushReplacementNamed(context, WelcomeScreen.ROUTE_NAME);
     FirebaseAuth.instance.signOut();
   }
 }

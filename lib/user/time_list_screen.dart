@@ -2,6 +2,7 @@
 
 import 'dart:developer';
 
+import 'package:booking_app/Theme/theme_data.dart';
 import 'package:booking_app/common/common_functions.dart';
 import 'package:booking_app/data/booked_data.dart';
 import 'package:booking_app/data/booking_data.dart';
@@ -67,12 +68,14 @@ class _TimeListScreenState extends State<TimeListScreen> {
                         widget.bookingData.timeRange.removeAt(index);
                       });
                     },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.white),
-                    ),
+                   style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            MyThemeData.PRIMARY_COLOR),
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)))),
                     child: Text(
                       AppLocalizations.of(context)!.book,
-                      style: TextStyle(color: Theme.of(context).primaryColor),
+                      style: const TextStyle(color: Colors.white),
                     )),
               ],
             ),
@@ -97,13 +100,10 @@ class _TimeListScreenState extends State<TimeListScreen> {
   }
 
   void addBooking(BookingData bookingData, int index) {
-    // dynamic value = generatedList[widget.selectedIndex];
-    // addBookedData(BookedData(bookedList: getList(value)));
     widget.deletedIndex.add(index);
     deleteBookingData(bookingData, widget.deletedIndex);
     log('deleted..... ' + widget.deletedIndex.toString());
     addUserBookingToFirebase(userData(bookingData, index)).then((value) async {
-      // generatedList = await generateLists(bookingData);
       setState(() {});
       showDialog(
         context: context,

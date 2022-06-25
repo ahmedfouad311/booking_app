@@ -46,5 +46,16 @@
     "invaild_email_or_password": "Invaild Email or Password!",
     "admin_logged_in_successfully": "Admin logged in Successfully!",
     "this_day_is_not_available": "This day is not Available",
-    "time_book_screen": "Time Book Screen"
+    "time_book_screen": "Time Book Screen",
+    "welcome_to_football_booking_app": "Welcome to Football Booking App",
+    "lets_get_started": "Lets Get Started",
+    "next": "Next",
+    "email_or_phone": "Email or Phone",
+    "getting_started": "Getting Started",
+    "invalid_email_or_phone": "Invalid email or phone",
+    "verfiy": "Verfiy",
+    "name": "Name",
+    "please_enter_a_name": "Please Enter a name",
+    "register": "Register",
+    "ok": "Ok"
 }

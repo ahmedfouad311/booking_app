@@ -1,38 +1,36 @@
-// ignore_for_file: constant_identifier_names, unused_local_variable, avoid_print
+// ignore_for_file: must_be_immutable, constant_identifier_names
 
 import 'package:booking_app/Theme/theme_data.dart';
-import 'package:booking_app/admin/admin_home.dart';
 import 'package:booking_app/common/common_functions.dart';
+import 'package:booking_app/login_register/admin/login_admin_screen.dart';
+import 'package:booking_app/login_register/admin/register_admin_screen.dart';
+import 'package:booking_app/login_register/user/register_user_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class LoginAdminScreen extends StatefulWidget {
-  static const String ROUTE_NAME = 'Login Admin Screen';
+class SigninScreen extends StatefulWidget {
+  static const String ROUTE_NAME = 'Sign In Screen';
 
-  const LoginAdminScreen({Key? key}) : super(key: key);
+  const SigninScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginAdminScreen> createState() => _LoginAdminScreenState();
+  State<SigninScreen> createState() => _SigninScreenState();
 }
 
-class _LoginAdminScreenState extends State<LoginAdminScreen> {
-  String password = '';
-  bool passwordVisible = false;
-  late String arguments;
-
+class _SigninScreenState extends State<SigninScreen> {
+  String userInput = '';
   var formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    arguments = ModalRoute.of(context)!.settings.arguments as String;
     return Container(
       color: Colors.white,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: MyThemeData.PRIMARY_COLOR,
           title: Text(
-            AppLocalizations.of(context)!.login_screen,
+            AppLocalizations.of(context)!.getting_started,
             style: const TextStyle(fontSize: 25),
           ),
         ),
@@ -49,38 +47,31 @@ class _LoginAdminScreenState extends State<LoginAdminScreen> {
                   ),
                   TextFormField(
                     cursorColor: MyThemeData.PRIMARY_COLOR,
-                    obscureText: !passwordVisible,
                     onChanged: (text) {
-                      password = text;
+                      userInput = text;
                     },
                     validator: (text) {
                       if (text == null || text.trim().isEmpty) {
                         return AppLocalizations.of(context)!
-                            .please_enter_a_password;
+                            .please_enter_your_email;
                       }
-                      if (text.length < 6) {
+                      if (!isValidEmail(userInput) && !isPhone(userInput)) {
                         return AppLocalizations.of(context)!
-                            .password_is_too_short;
+                            .please_enter_a_vaild_email_address_or_phone_number;
                       }
                       return null;
                     },
                     decoration: InputDecoration(
-                      suffixIcon: InkWell(
-                          onTap: () {
-                            setState(() {
-                              passwordVisible = true;
-                            });
-                          },
-                          child: const Icon(Icons.remove_red_eye)),
-                      labelText: AppLocalizations.of(context)!.the_password,
+                      labelText: AppLocalizations.of(context)!.email_or_phone,
                       labelStyle: const TextStyle(color: MyThemeData.PRIMARY_COLOR),
                       focusedBorder: const UnderlineInputBorder(
                         borderSide:
                             BorderSide(color: MyThemeData.PRIMARY_COLOR),
                       ),
-                      suffixIconColor: MyThemeData.PRIMARY_COLOR
-                      
                     ),
+                  ),
+                  const SizedBox(
+                    height: 8,
                   ),
                   const SizedBox(
                     height: 30,
@@ -93,7 +84,7 @@ class _LoginAdminScreenState extends State<LoginAdminScreen> {
                             borderRadius: BorderRadius.circular(20)))),
                     onPressed: () {
                       if (formKey.currentState?.validate() == true) {
-                        loginWithFirebaseAuth();
+                        checkUserOrAdmin();
                       }
                     },
                     child: Padding(
@@ -119,21 +110,30 @@ class _LoginAdminScreenState extends State<LoginAdminScreen> {
     );
   }
 
-  void loginWithFirebaseAuth() async {
-    try {
-      showLoading(context);
-      var result = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: arguments, password: password);
-      hideLoading(context);
-      if (result.user != null) {
-        showMessage(AppLocalizations.of(context)!.admin_logged_in_successfully,
-            context);
-        Navigator.pushReplacementNamed(context, AdminHome.ROUTE_NAME);
+  void checkUserOrAdmin() async {
+    if (isValidEmail(userInput)) {
+      try {
+        showLoading(context);
+        var result =
+            await FirebaseAuth.instance.fetchSignInMethodsForEmail(userInput);
+        hideLoading(context);
+        if (result.isNotEmpty) {
+          showMessage(
+              AppLocalizations.of(context)!.admin_logged_in_successfully,
+              context);
+          Navigator.pushNamed(context, LoginAdminScreen.ROUTE_NAME,
+              arguments: userInput);
+        } else {
+          Navigator.pushNamed(context, RegisterAdminScreen.ROUTE_NAME);
+        }
+      } catch (error) {
+        hideLoading(context);
+        showMessage(
+            AppLocalizations.of(context)!.invaild_email_or_password, context);
       }
-    } catch (error) {
-      hideLoading(context);
-      showMessage(
-          AppLocalizations.of(context)!.invaild_email_or_password, context);
+    } else if (isPhone(userInput)) {
+      Navigator.pushNamed(context, RegisterUserScreen.ROUTE_NAME,
+          arguments: userInput);
     }
   }
 }

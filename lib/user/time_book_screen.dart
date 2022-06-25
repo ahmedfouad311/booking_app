@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable, constant_identifier_names
 
 
+import 'package:booking_app/Theme/theme_data.dart';
 import 'package:booking_app/data/booking_data.dart';
 import 'package:booking_app/data/firestore_utils.dart';
 import 'package:booking_app/data/user_booking_data.dart';
@@ -38,6 +39,7 @@ class _TimeBookScreenState extends State<TimeBookScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: MyThemeData.PRIMARY_COLOR,
         centerTitle: true,
         title: Text(AppLocalizations.of(context)!.time_book_screen),
       ),

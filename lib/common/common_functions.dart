@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:booking_app/Theme/theme_data.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 bool isValidEmail(String email) {
   return RegExp(
@@ -24,7 +26,7 @@ void showMessage(String message, BuildContext context) {
             onPressed: () {
               Navigator.pop(context);
             },
-            child: const Text('ok'),
+            child: Text(AppLocalizations.of(context)!.ok, style: TextStyle(color: MyThemeData.PRIMARY_COLOR),),
           ),
         ],
       );
@@ -41,11 +43,11 @@ void showLoading(BuildContext context) {
         content: Row(
           // ignore: prefer_const_literals_to_create_immutables
           children: [
-            CircularProgressIndicator(),
+            CircularProgressIndicator(color: MyThemeData.PRIMARY_COLOR,),
             SizedBox(
               width: 12,
             ),
-            Text('Loading...'),
+            Text(AppLocalizations.of(context)!.loading, style: TextStyle(color: MyThemeData.PRIMARY_COLOR),),
           ],
         ),
       );

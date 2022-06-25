@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:booking_app/Theme/theme_data.dart';
 import 'package:booking_app/data/user_booking_data.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -20,7 +21,7 @@ class _HomeBookingItemState extends State<HomeBookingItem> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Container(
         padding: const EdgeInsets.all(20),
-        color: Theme.of(context).primaryColor,
+        color: MyThemeData.PRIMARY_COLOR,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

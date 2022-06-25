@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:booking_app/Theme/theme_data.dart';
 import 'package:flutter/material.dart';
 
 class SelectedItem extends StatelessWidget {
@@ -15,23 +16,23 @@ class SelectedItem extends StatelessWidget {
           children: [
             Text(
               text,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 18,
-                color: Theme.of(context).primaryColor,
+                color: MyThemeData.PRIMARY_COLOR,
               ),
             ),
             const SizedBox(
               width: 5,
             ),
-            Icon(
+            const Icon(
               Icons.language,
-              color: Theme.of(context).primaryColor,
+              color: MyThemeData.PRIMARY_COLOR,
             ),
           ],
         ),
-        Icon(
+        const Icon(
           Icons.check,
-          color: Theme.of(context).primaryColor,
+          color: MyThemeData.PRIMARY_COLOR,
         ),
       ],
     );
