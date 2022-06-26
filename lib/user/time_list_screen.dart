@@ -109,14 +109,14 @@ class _TimeListScreenState extends State<TimeListScreen> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            content: Text(AppLocalizations.of(context)!.booking_added_successfully),
+            content: Text(AppLocalizations.of(context)!.booking_added_successfully, style: const TextStyle(color: MyThemeData.PRIMARY_COLOR),),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.pushReplacementNamed(
                       context, HomeScreen.ROUTE_NAME);
                 },
-                child: const Text('ok'),
+                child: const Text('ok', style: TextStyle(color: MyThemeData.PRIMARY_COLOR),),
               ),
             ],
           );

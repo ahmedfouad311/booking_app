@@ -59,7 +59,6 @@ class _TimeBookScreenState extends State<TimeBookScreen> {
             return ListView.builder(
               shrinkWrap: true,
               itemBuilder: (context, index) {
-                // log(items[index].timeRange[0].toString());
                 return TimeListScreen(
                   bookingData: items[index],
                   userDate: arguments.userDate,

@@ -12,9 +12,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class UserBooking extends StatefulWidget {
   static const String ROUTE_NAME = 'User Booking Screen';
   final List<UserBookingData> userBookingData;
-  late BookingData bookingData;
-  late DateTime userDate = DateTime.now();
-  UserBooking({
+  const UserBooking({
     Key? key, required this.userBookingData,
   }) : super(key: key);
 

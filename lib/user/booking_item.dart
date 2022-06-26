@@ -1,10 +1,8 @@
 // ignore_for_file: must_be_immutable
 
-
 import 'package:booking_app/Theme/theme_data.dart';
 import 'package:booking_app/common/common_functions.dart';
 import 'package:booking_app/common/datetime_handler.dart';
-import 'package:booking_app/data/booked_data.dart';
 import 'package:booking_app/data/booking_data.dart';
 import 'package:booking_app/data/user_booking_data.dart';
 import 'package:booking_app/user/time_book_screen.dart';
@@ -14,12 +12,10 @@ import 'package:intl/intl.dart';
 
 class BookingItem extends StatefulWidget {
   BookingData bookingData;
-  late BookedData bookedData;
   DateTime userDate;
-  String initialDropDownValueHours = '';
-  int selectedIndex = 0;
   final List<UserBookingData> userBookingData;
-  BookingItem(this.bookingData, {Key? key, required this.userBookingData, required this.userDate})
+  BookingItem(this.bookingData,
+      {Key? key, required this.userBookingData, required this.userDate})
       : super(key: key);
 
   @override
@@ -27,14 +23,6 @@ class BookingItem extends StatefulWidget {
 }
 
 class _BookingItemState extends State<BookingItem> {
-  List<String> generatedList = [];
-  @override
-  Future<void> didChangeDependencies() async {
-    // generatedList = await generateLists(widget.bookingData);
-    setState(() {});
-    super.didChangeDependencies();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -97,10 +85,9 @@ class _BookingItemState extends State<BookingItem> {
               children: [
                 ElevatedButton(
                   style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            Colors.white),
-                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)))),
+                      backgroundColor: MaterialStateProperty.all(Colors.white),
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)))),
                   onPressed: () {
                     showDateDialog();
                     setState(() {});
@@ -116,8 +103,8 @@ class _BookingItemState extends State<BookingItem> {
                       checkRange();
                     },
                     style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            Colors.white),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.white),
                         shape: MaterialStateProperty.all(RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20)))),
                     child: Text(
@@ -135,7 +122,6 @@ class _BookingItemState extends State<BookingItem> {
   void checkRange() {
     if (widget.userDate
         .isBetween(widget.bookingData.fromDate, widget.bookingData.toDate)) {
-      // addBooking(widget.bookingData);
       Navigator.pushNamed(context, TimeBookScreen.ROUTE_NAME,
           arguments: BookingItem(
             widget.bookingData,
@@ -150,11 +136,16 @@ class _BookingItemState extends State<BookingItem> {
 
   void showDateDialog() async {
     var newSelectedDate = await showDatePicker(
-      context: context,
-      initialDate: widget.userDate,
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-    );
+        context: context,
+        initialDate: widget.userDate,
+        firstDate: DateTime.now(),
+        lastDate: DateTime.now().add(const Duration(days: 365)),
+        builder: (context, child) {
+          return Theme(data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(primary: MyThemeData.PRIMARY_COLOR)
+          ), 
+          child: child!);
+        });
     if (newSelectedDate != null) {
       widget.userDate = newSelectedDate;
       setState(() {});

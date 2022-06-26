@@ -239,6 +239,12 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
           end: DateTime.now().add(const Duration(days: 7))),
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
+      builder: (context, child) {
+          return Theme(data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(primary: MyThemeData.PRIMARY_COLOR)
+          ), 
+          child: child!);
+        }
     );
     if (newSelectedDate != null) {
       startSelectedDate = newSelectedDate.start;
@@ -272,6 +278,13 @@ class _AddBookingAdminState extends State<AddBookingAdmin> {
       handlerColor: MyThemeData.PRIMARY_COLOR,
       selectedColor: Colors.white,
       backgroundColor: Colors.black.withOpacity(0.3),
+      builder: (context, child) {
+          return Theme(data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(primary: MyThemeData.PRIMARY_COLOR,),
+            primaryColor: MyThemeData.PRIMARY_COLOR
+          ), 
+          child: child!);
+        },
       ticks: 12,
       ticksColor: Colors.white,
       snap: true,
