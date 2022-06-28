@@ -1,20 +1,23 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:booking_app/Theme/theme_data.dart';
 import 'package:booking_app/admin/details/admin_details_item.dart';
 import 'package:booking_app/data/firestore_utils.dart';
 import 'package:booking_app/data/user_booking_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AdminDetailsScreen extends StatelessWidget {
-  static const String ROUTE_NAME = 'Admin Detalis Screen';
+  static const String ROUTE_NAME = 'All Bookings';
   const AdminDetailsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Admin Detalis Screen'),
+        title: Text(AppLocalizations.of(context)!.all_bookings),
+        backgroundColor: MyThemeData.PRIMARY_COLOR,
       ),
       body: StreamBuilder<QuerySnapshot<UserBookingData>>(
         stream: getUserBookingCollectionWithConverter().snapshots(),

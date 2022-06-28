@@ -21,8 +21,8 @@
     "drop_down_initial_value": "ادخل الوقت المراد لمبارايات اليوم",
     "add_booking_button": "اضافة",
     "book": "حجز",
-    "from": "من",
-    "to": "الي",
+    "from": ":من",
+    "to": ":الي",
     "user_booking": "حجز المستخدم",
     "loading": "تحميل",
     "admin_home": "الصفحة الرئيسية الادمن",
@@ -57,5 +57,7 @@
     "name": "الاسم",
     "please_enter_a_name": "من فضلك ادخل اسم",
     "register": "حجز",
-    "ok": "تم"
+    "ok": "تم",
+    "all_bookings": "جميع الحجوزات",
+    "show_all_bookings": "عرض جميع الحجوزات"
 }

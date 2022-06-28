@@ -57,5 +57,7 @@
     "name": "Name",
     "please_enter_a_name": "Please Enter a name",
     "register": "Register",
-    "ok": "Ok"
+    "ok": "Ok",
+    "all_bookings": "All Bookings",
+    "show_all_bookings": "Show All Bookings"
 }

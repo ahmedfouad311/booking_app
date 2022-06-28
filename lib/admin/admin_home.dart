@@ -3,6 +3,7 @@
 import 'package:booking_app/Theme/theme_data.dart';
 import 'package:booking_app/admin/add_booking_admin.dart';
 import 'package:booking_app/admin/admin_booking_item.dart';
+import 'package:booking_app/admin/details/admin_details_screen.dart';
 import 'package:booking_app/common/selected_unselected_items/selected_item.dart';
 import 'package:booking_app/common/selected_unselected_items/unselected_item.dart';
 import 'package:booking_app/data/booking_data.dart';
@@ -82,6 +83,29 @@ class _AdminHomeState extends State<AdminHome> {
                           text: AppLocalizations.of(context)!.language_arabic)
                       : UnselectedItem(
                           text: AppLocalizations.of(context)!.language_arabic)),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: InkWell(
+                onTap: (() {
+                  Navigator.pushNamed(context, AdminDetailsScreen.ROUTE_NAME);
+                }),
+                child: Row(
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.show_all_bookings,
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    const Icon(Icons.book_outlined)
+                  ],
+                ),
+              ),
             ),
             const SizedBox(
               height: 20,
